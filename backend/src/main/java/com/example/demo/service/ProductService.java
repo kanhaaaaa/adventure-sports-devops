@@ -1,28 +1,35 @@
 package com.example.demo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Product;
+import com.example.demo.repository.ProductRepository;
 
 @Service
 public class ProductService {
 
-    private final List<Product> products = new ArrayList<>();
+    private final ProductRepository productRepository;
 
-    public ProductService() {
-        products.add(new Product(1, "Trekking Bag", "Bags", 2999, "Waterproof hiking bag"));
-        products.add(new Product(2, "Climbing Rope", "Climbing", 1499, "Strong safety rope"));
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<Product> getProducts() {
-        return products;
+        return productRepository.getProducts();
     }
 
     public Product addProduct(Product product) {
-        products.add(product);
-        return product;
+        return productRepository.addProduct(product);
+    }
+    public Product updateProduct(int id, Product product) {
+        return productRepository.updateProduct(id, product);
+    }
+    public Product getProductById(int id) {
+        return productRepository.getProductById(id);
+    }
+    public boolean deleteProduct(int id) {
+        return productRepository.deleteProduct(id);
     }
 }
