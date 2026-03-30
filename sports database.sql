@@ -1,1 +1,1 @@
-SHOW DATABASES;
+CREATE DATABASE adventure_db;
