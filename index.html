@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdventurePro — Sports Equipment Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 4-8 4 5"/><path d="M3 21h18"/></svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">AdventurePro</span>
+        <span class="brand-sub">Store Manager</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">Main</p>
+      <nav>
+        <a class="nav-link" data-tab="home" onclick="switchTab('home',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </a>
+        <a class="nav-link active" data-tab="dashboard" onclick="switchTab('dashboard',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a class="nav-link" data-tab="catalog" onclick="switchTab('catalog',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          Catalog
+          <span class="nav-badge" id="navBadge">0</span>
+        </a>
+        <a class="nav-link" data-tab="add" onclick="switchTab('add',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Add Product
+        </a>
+        <a class="nav-link" data-tab="analytics" onclick="switchTab('analytics',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analytics
+        </a>
+      </nav>
+    </div>
+
+    <div class="nav-section">
+      <p class="nav-label">System</p>
+      <nav>
+        <a class="nav-link" data-tab="settings" onclick="switchTab('settings',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 2v2m0 16v2M2 12h2m16 0h2"/></svg>
+          Settings
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-status">
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusLabel">Connecting…</span>
+      </div>
+      <p class="status-url">localhost:8080</p>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1 class="page-heading" id="pageHeading">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search products…" onkeyup="liveSearch()">
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar-avatar">MG</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ═══ HOME TAB ═══ -->
+    <section id="tab-home" class="tab">
+      <div class="home-hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Adventure Sports Store
+          </div>
+          <h1 class="hero-title">Manage Your<br><span class="hero-accent">Adventure Gear</span><br>Inventory</h1>
+          <p class="hero-desc">Add, update, track and analyse your entire product catalogue from one place.</p>
+          <div class="hero-actions">
+            <button class="btn-accent hero-btn" onclick="switchTab('catalog', document.querySelector('[data-tab=catalog]'))">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+              Browse Catalog
+            </button>
+            <button class="btn-ghost hero-btn" onclick="switchTab('dashboard', document.querySelector('[data-tab=dashboard]'))">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Go to Dashboard
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-val" id="hTotal">—</span>
+              <span class="hero-stat-label">Products</span>
+            </div>
+            <div class="hero-stat-div"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-val" id="hCats">—</span>
+              <span class="hero-stat-label">Categories</span>
+            </div>
+            <div class="hero-stat-div"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-val"><span class="status-dot" id="hApiDot"></span></span>
+              <span class="hero-stat-label">API Status</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card-stack">
+            <div class="hcard hcard-back2"></div>
+            <div class="hcard hcard-back1"></div>
+            <div class="hcard hcard-front">
+              <div class="hcard-top">
+                <span class="hcard-id">ID #01</span>
+                <span class="hcard-badge">Bags</span>
+              </div>
+              <div class="hcard-name">Trekking Bag Pro</div>
+              <div class="hcard-desc">Waterproof hiking bag with reinforced straps and multiple compartments</div>
+              <div class="hcard-footer">
+                <span class="hcard-price">&#8377;2,999</span>
+                <div class="hcard-dots"><span></span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-features">
+        <div class="feat-card">
+          <div class="feat-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
+          <h3>Product Catalog</h3>
+          <p>Browse all products in grid or list view. Filter by category, sort by price or name, and search in real time.</p>
+          <button class="feat-link" onclick="switchTab('catalog', document.querySelector('[data-tab=catalog]'))">Open Catalog</button>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <h3>Add Products</h3>
+          <p>Add new products to inventory with a live preview card that updates as you type, see exactly how it will look.</p>
+          <button class="feat-link" onclick="switchTab('add', document.querySelector('[data-tab=add]'))">Add Product</button>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3>Analytics</h3>
+          <p>Visual insights on price distribution, category breakdown, top priced items and inventory value analysis.</p>
+          <button class="feat-link" onclick="switchTab('analytics', document.querySelector('[data-tab=analytics]'))">View Analytics</button>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon red">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <h3>Manage and Edit</h3>
+          <p>Update or delete any product by ID. Load existing product details automatically and save changes instantly.</p>
+          <button class="feat-link" onclick="switchTab('settings', document.querySelector('[data-tab=settings]'))">Manage Products</button>
+        </div>
+      </div>
+
+      <div class="home-tech">
+        <div class="tech-label">Tech Stack</div>
+        <div class="tech-pills">
+          <span class="tech-pill">Spring Boot</span>
+          <span class="tech-pill">Java</span>
+          <span class="tech-pill">REST API</span>
+          <span class="tech-pill">HTML5</span>
+          <span class="tech-pill">CSS3</span>
+          <span class="tech-pill">JavaScript</span>
+          <span class="tech-pill">Maven</span>
+          <span class="tech-pill">GitHub Actions</span>
+          <span class="tech-pill accent">CI/CD Pipeline</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ DASHBOARD TAB ═══ -->
+    <section id="tab-dashboard" class="tab active">
+
+      <div class="welcome-strip">
+        <div>
+          <h2 class="welcome-title">Welcome back 👋</h2>
+          <p class="welcome-sub">Here's what's happening with your store today.</p>
+        </div>
+        <button class="btn-accent" onclick="switchTab('add', document.querySelector('[data-tab=add]'))">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Product
+        </button>
+      </div>
+
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Total Products</span>
+            <span class="kpi-icon green">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value" id="kTotal">—</div>
+          <div class="kpi-sub" id="kTotalSub">Loading…</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Categories</span>
+            <span class="kpi-icon blue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h8m-8 6h16"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value" id="kCats">—</div>
+          <div class="kpi-sub" id="kCatsSub">Loading…</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Avg. Price</span>
+            <span class="kpi-icon amber">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value" id="kAvg">—</div>
+          <div class="kpi-sub">Across all products</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Inventory Value</span>
+            <span class="kpi-icon red">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value" id="kTotal2">—</div>
+          <div class="kpi-sub">Sum of all prices</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <!-- Recent products -->
+        <div class="dash-card span2">
+          <div class="dash-card-head">
+            <h3>Recent Products</h3>
+            <a onclick="switchTab('catalog', document.querySelector('[data-tab=catalog]'))" class="view-all">View all →</a>
+          </div>
+          <table class="data-table" id="recentTable">
+            <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Action</th></tr></thead>
+            <tbody id="recentBody"></tbody>
+          </table>
+        </div>
+        <!-- Category breakdown -->
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>By Category</h3></div>
+          <div id="catBreakdown" class="cat-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CATALOG TAB ═══ -->
+    <section id="tab-catalog" class="tab">
+      <div class="catalog-toolbar">
+        <div class="toolbar-left">
+          <div class="view-toggle">
+            <button id="btnGrid" class="vtbtn active" onclick="setView('grid')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+            <button id="btnList" class="vtbtn" onclick="setView('list')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+          <select id="catFilter" onchange="applyFilters()" class="select-sm">
+            <option value="">All Categories</option>
+          </select>
+          <select id="sortBy" onchange="applyFilters()" class="select-sm">
+            <option value="id">Sort: ID</option>
+            <option value="name">Sort: Name A–Z</option>
+            <option value="price_asc">Sort: Price ↑</option>
+            <option value="price_desc">Sort: Price ↓</option>
+          </select>
+        </div>
+        <div class="toolbar-right">
+          <span class="result-count" id="resultCount">— products</span>
+          <button class="btn-sm" onclick="loadProducts()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div id="productContainer" class="product-grid"></div>
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-gfx">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <h3>No products found</h3>
+        <p>Try adjusting your search or filters</p>
+        <button class="btn-accent" onclick="switchTab('add', document.querySelector('[data-tab=add]'))">Add Product</button>
+      </div>
+    </section>
+
+    <!-- ═══ ADD PRODUCT TAB ═══ -->
+    <section id="tab-add" class="tab">
+      <div class="form-layout">
+        <div class="form-panel">
+          <div class="form-panel-head">
+            <h2>New Product</h2>
+            <p>Fill in the details below to add a product to your inventory.</p>
+          </div>
+
+          <div class="field-group">
+            <div class="field-row">
+              <div class="field">
+                <label>Product ID <span class="req">*</span></label>
+                <input type="number" id="f-id" placeholder="e.g. 101" min="1">
+              </div>
+              <div class="field">
+                <label>Price (₹) <span class="req">*</span></label>
+                <div class="input-prefix">
+                  <span>₹</span>
+                  <input type="number" id="f-price" placeholder="0" min="0">
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Product Name <span class="req">*</span></label>
+              <input type="text" id="f-name" placeholder="e.g. Trekking Bag Pro">
+            </div>
+            <div class="field">
+              <label>Category <span class="req">*</span></label>
+              <div class="cat-input-wrap">
+                <input type="text" id="f-category" placeholder="e.g. Bags, Climbing, Safety" list="catSuggestions">
+                <datalist id="catSuggestions"></datalist>
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="f-desc" placeholder="Brief description of the product…" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-accent" onclick="addProduct()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Product
+            </button>
+            <button class="btn-ghost" onclick="clearAddForm()">Clear form</button>
+          </div>
+          <div id="addMsg" class="inline-msg hidden"></div>
+        </div>
+
+        <div class="form-preview">
+          <p class="preview-label">Live Preview</p>
+          <div class="preview-card" id="previewCard">
+            <div class="preview-top">
+              <span class="preview-id" id="prevId">ID #—</span>
+              <span class="preview-badge" id="prevCat">Category</span>
+            </div>
+            <div class="preview-name" id="prevName">Product Name</div>
+            <div class="preview-desc" id="prevDesc">Description will appear here…</div>
+            <div class="preview-price" id="prevPrice">₹ —</div>
+          </div>
+          <p class="preview-hint">Preview updates as you type</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ ANALYTICS TAB ═══ -->
+    <section id="tab-analytics" class="tab">
+      <div class="analytics-grid">
+
+        <div class="a-card span3">
+          <div class="a-card-head"><h3>Price Distribution by Category</h3></div>
+          <div id="chartBars" class="chart-bars"></div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-head"><h3>Top Priced Items</h3></div>
+          <div id="topItems" class="top-list"></div>
+        </div>
+
+        <div class="a-card">
+          <div class="a-card-head"><h3>Category Share</h3></div>
+          <div id="catShare" class="cat-share"></div>
+        </div>
+
+        <div class="a-card span2">
+          <div class="a-card-head"><h3>Price Range Analysis</h3></div>
+          <div class="price-ranges" id="priceRanges"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══ SETTINGS TAB ═══ -->
+    <section id="tab-settings" class="tab">
+      <div class="settings-layout">
+
+        <div class="settings-panel">
+          <h3>API Configuration</h3>
+          <div class="field">
+            <label>Backend URL</label>
+            <div class="field-row">
+              <input type="text" id="apiUrl" value="http://localhost:8080/products">
+              <button class="btn-sm" onclick="testConnection()">Test</button>
+            </div>
+          </div>
+          <div id="connResult" class="inline-msg hidden"></div>
+        </div>
+
+        <div class="settings-panel">
+          <h3>Edit / Update Product</h3>
+          <div class="field-group">
+            <div class="field-row">
+              <div class="field">
+                <label>Product ID <span class="req">*</span></label>
+                <div style="display:flex;gap:8px">
+                  <input type="number" id="e-id" placeholder="Enter ID">
+                  <button class="btn-sm" onclick="fetchForEdit()">Load</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Price (₹)</label>
+                <div class="input-prefix"><span>₹</span><input type="number" id="e-price" placeholder="0"></div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Name</label>
+              <input type="text" id="e-name" placeholder="Product name">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Category</label>
+                <input type="text" id="e-cat" placeholder="Category">
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="e-desc" placeholder="Description…" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-accent" onclick="updateProduct()">Save Changes</button>
+            <button class="btn-danger-sm" onclick="openDeleteModal()">Delete Product</button>
+          </div>
+          <div id="editMsg" class="inline-msg hidden"></div>
+        </div>
+
+        <div class="settings-panel">
+          <h3>Data Management</h3>
+          <p class="settings-desc">Manage your product inventory data.</p>
+          <div class="data-actions">
+            <button class="btn-ghost" onclick="exportData()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export JSON
+            </button>
+            <button class="btn-ghost" onclick="copyApiUrl()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy API URL
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6m4-6v6"/><path d="M9 6V4h6v2"/></svg>
+    </div>
+    <h3>Confirm Delete</h3>
+    <p id="modalText">This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn-danger-full" onclick="confirmDelete()">Delete</button>
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- SEARCH OVERLAY -->
+<div id="searchOverlay" class="search-overlay hidden">
+  <div class="search-modal">
+    <div class="search-modal-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="overlaySearch" placeholder="Search any product…" oninput="overlayFilter()">
+      <button onclick="closeOverlay()">✕</button>
+    </div>
+    <div id="overlayResults" class="overlay-results"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
