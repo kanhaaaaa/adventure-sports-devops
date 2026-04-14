@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -21,10 +23,26 @@ public class Product {
     public Product() {
     }
 
-    // Constructor
-    public Product(int id, String name, String category,
-                   double price, String description) {
+    // Constructor WITH id (optional, useful for updates or testing)
+    public Product(int id,
+                   String name,
+                   String category,
+                   double price,
+                   String description) {
+
         this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.description = description;
+    }
+
+    // NEW Constructor WITHOUT id (THIS FIXES YOUR ERROR)
+    public Product(String name,
+                   String category,
+                   double price,
+                   String description) {
+
         this.name = name;
         this.category = category;
         this.price = price;
