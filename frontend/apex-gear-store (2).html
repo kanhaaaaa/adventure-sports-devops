@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX GEAR — Adventure Sports Equipment</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a; --surface:#111; --surface2:#1a1a1a; --border:#2a2a2a;
+  --accent:#ff4d00; --accent2:#ffcc00; --text:#f0ece4; --muted:#888;
+  --green:#00e676; --card-bg:#141414;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ── CURSOR ── */
+#cursor{width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .1s,background .2s}
+#cursor-ring{width:36px;height:36px;border:1.5px solid var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:transform .18s ease,width .2s,height .2s;opacity:.6}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--accent);color:#000;text-align:center;padding:8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:1000;background:rgba(10,10,10,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:70px}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:4px;color:var(--text);text-decoration:none;cursor:none}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:2px;text-transform:uppercase;font-weight:600;transition:color .2s;cursor:none}
+.nav-links a:hover,.nav-links a.active-link{color:var(--text)}
+.nav-actions{display:flex;gap:12px;align-items:center}
+.nav-icon{background:none;border:none;color:var(--text);cursor:none;font-size:18px;position:relative;transition:color .2s;display:flex;align-items:center;justify-content:center;width:40px;height:40px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:1px}
+.nav-icon:hover{color:var(--accent)}
+.cart-badge{position:absolute;top:2px;right:2px;background:var(--accent);color:#000;font-size:10px;font-weight:700;border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{padding:20px 60px;display:flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.breadcrumb a{color:var(--muted);cursor:none;background:none;border:none;transition:color .2s;text-decoration:none}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb span{color:var(--accent)}
+
+/* ── BUTTONS ── */
+.btn-primary{background:var(--accent);color:#000;border:none;padding:14px 32px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:transform .2s,background .2s;display:inline-block}
+.btn-primary:hover{background:#ff6a2a;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);padding:14px 32px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:border-color .2s,color .2s;display:inline-block}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── MARQUEE ── */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:16px 0}
+.marquee-inner{display:flex;gap:60px;white-space:nowrap;animation:marquee 22s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--muted)}
+.marquee-inner span{color:var(--accent)}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTION ── */
+.section-wrap{padding:80px 60px}
+.section-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,72px);letter-spacing:2px;line-height:1}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px}
+
+/* ── PRODUCT CARD ── */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.product-card{background:var(--card-bg);border:1px solid var(--border);overflow:hidden;transition:border-color .25s,transform .25s;cursor:none;position:relative}
+.product-card:hover{border-color:var(--accent);transform:translateY(-6px)}
+.product-img-wrap{position:relative;height:220px;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-emoji{font-size:76px;transition:transform .4s;user-select:none}
+.product-card:hover .product-emoji{transform:scale(1.15) rotate(-5deg)}
+.product-badge{position:absolute;top:10px;left:10px;padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.badge-new{background:var(--accent2);color:#000}
+.badge-sale{background:var(--accent);color:#000}
+.badge-hot{background:var(--green);color:#000}
+.product-wishlist{position:absolute;top:10px;right:10px;background:rgba(10,10,10,.7);border:1px solid var(--border);width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:none;font-size:15px;transition:background .2s,border-color .2s;backdrop-filter:blur(8px)}
+.product-wishlist:hover{background:var(--accent);border-color:var(--accent)}
+.product-info{padding:18px}
+.product-cat{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-weight:600}
+.product-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.5px;margin-bottom:6px;line-height:1.2}
+.product-rating{display:flex;gap:4px;align-items:center;margin-bottom:10px}
+.stars{color:var(--accent2);font-size:12px}
+.rating-count{font-size:12px;color:var(--muted)}
+.product-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.product-price{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--text);letter-spacing:1px}
+.product-original{font-size:13px;color:var(--muted);text-decoration:line-through;margin-left:6px}
+.add-cart-btn{background:var(--accent);color:#000;border:none;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:none;transition:background .2s,transform .15s}
+.add-cart-btn:hover{background:#ff6a2a;transform:scale(1.05)}
+
+/* ── SIDEBAR FILTER ── */
+.category-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+.filter-sidebar{background:var(--card-bg);border:1px solid var(--border);padding:28px;position:sticky;top:90px}
+.filter-sidebar h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.filter-group{margin-bottom:24px}
+.filter-group-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.filter-option{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:none;transition:color .2s;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px;border:none;background:none;color:var(--muted);width:100%;text-align:left}
+.filter-option:hover,.filter-option.active{color:var(--accent)}
+.filter-option .check{width:16px;height:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .2s}
+.filter-option.active .check{background:var(--accent);border-color:var(--accent);color:#000}
+.sort-select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;outline:none;cursor:none;appearance:none}
+.sort-select:focus{border-color:var(--accent)}
+.results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.results-count{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--muted);letter-spacing:1px}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;padding:0 80px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(255,77,0,.15) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(255,204,0,.07) 0%,transparent 50%),#0a0a0a}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,77,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,0,.04) 1px,transparent 1px);background-size:60px 60px}
+.hero-content{position:relative;z-index:2;max-width:700px;animation:fadeInUp .8s ease both}
+.hero-tag{display:inline-block;background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;margin-bottom:28px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,10vw,140px);line-height:.9;letter-spacing:2px;margin-bottom:28px}
+.hero h1 .acc{color:var(--accent)}
+.hero p{font-size:17px;color:var(--muted);max-width:480px;line-height:1.7;margin-bottom:40px;font-weight:400}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.hero-stats{position:absolute;right:80px;bottom:80px;display:flex;gap:48px;z-index:2;animation:fadeInUp .8s .3s ease both}
+.stat-item{text-align:center}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent);line-height:1}
+.stat-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* ── EXPLORE PAGE HERO ── */
+.explore-hero{background:var(--surface);border-bottom:1px solid var(--border);padding:60px}
+.explore-hero h1{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:3px;margin-bottom:12px}
+.explore-hero p{color:var(--muted);font-size:16px;max-width:560px;line-height:1.7}
+
+/* ── CATEGORY CARDS (Explore Page) ── */
+.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.explore-card{position:relative;overflow:hidden;border:1px solid var(--border);cursor:none;transition:border-color .3s,transform .3s;background:var(--card-bg)}
+.explore-card:hover{border-color:var(--accent);transform:translateY(-6px)}
+.explore-card-bg{height:220px;display:flex;align-items:center;justify-content:center;font-size:96px;position:relative;overflow:hidden;transition:background .3s}
+.explore-card:hover .explore-card-bg{background:rgba(255,77,0,.08)}
+.explore-card-body{padding:24px}
+.explore-card-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:6px}
+.explore-card-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.explore-card-meta{display:flex;align-items:center;justify-content:space-between}
+.explore-card-count{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--accent);font-weight:700;letter-spacing:1px}
+.explore-card-arrow{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--muted);transition:color .2s}
+.explore-card:hover .explore-card-arrow{color:var(--accent)}
+.explore-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.explore-tag{border:1px solid var(--border);padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+
+/* ── CATEGORY PAGE HERO ── */
+.cat-page-hero{position:relative;padding:60px 60px 40px;border-bottom:1px solid var(--border);overflow:hidden}
+.cat-page-hero-bg{position:absolute;inset:0;opacity:.04}
+.cat-page-hero-content{position:relative;z-index:2;display:flex;align-items:center;gap:32px}
+.cat-page-hero-icon{font-size:80px}
+.cat-page-hero-text h1{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:3px;margin-bottom:8px}
+.cat-page-hero-text p{color:var(--muted);font-size:15px;max-width:500px;line-height:1.7}
+.cat-page-hero-stats{display:flex;gap:32px;margin-top:20px}
+.cat-stat{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);letter-spacing:1px}
+.cat-stat strong{color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:20px;display:block;letter-spacing:1px}
+
+/* ── FEATURES STRIP ── */
+.features-strip{background:var(--surface);padding:40px 60px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.feature-icon{font-size:28px;margin-bottom:10px}
+.feature-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.feature-desc{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ── DEALS BANNER ── */
+.deals-banner{background:var(--accent);padding:70px 60px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.deals-content h2{font-family:'Bebas Neue',sans-serif;font-size:60px;color:#000;letter-spacing:2px;line-height:1}
+.deals-content p{color:rgba(0,0,0,.7);font-size:15px;margin-top:10px}
+.countdown{display:flex;gap:16px}
+.count-unit{text-align:center;background:rgba(0,0,0,.15);padding:14px 22px;min-width:76px}
+.count-num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:#000;line-height:1}
+.count-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,0,0,.6)}
+
+/* ── TESTIMONIALS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.review-card{background:var(--card-bg);border:1px solid var(--border);padding:28px}
+.review-stars{color:var(--accent2);font-size:16px;margin-bottom:12px}
+.review-text{font-size:14px;line-height:1.8;color:var(--muted);margin-bottom:20px;font-style:italic}
+.reviewer{display:flex;align-items:center;gap:14px}
+.reviewer-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--surface2);border:2px solid var(--border)}
+.reviewer-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px}
+.reviewer-tag{font-size:12px;color:var(--accent)}
+
+/* ── BRANDS ── */
+.brands-row{display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:28px}
+.brand-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--border);letter-spacing:3px;transition:color .25s;cursor:none}
+.brand-logo:hover{color:var(--text)}
+
+/* ── NEWSLETTER ── */
+.newsletter{background:linear-gradient(135deg,#1a0a00,#0a0a0a);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 60px;text-align:center}
+.newsletter h2{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:3px;margin-bottom:10px}
+.newsletter p{color:var(--muted);margin-bottom:28px;font-size:15px}
+.newsletter-form{display:flex;max-width:480px;margin:0 auto}
+.newsletter-form input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:13px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none}
+.newsletter-form input:focus{border-color:var(--accent)}
+.newsletter-form button{background:var(--accent);border:none;color:#000;padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;white-space:nowrap;transition:background .2s}
+.newsletter-form button:hover{background:#ff6a2a}
+
+/* ── FOOTER ── */
+footer{background:#050505;border-top:1px solid var(--border);padding:56px 60px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand-name{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:4px;margin-bottom:12px}
+.footer-brand-name span{color:var(--accent)}
+.footer-desc{color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:20px}
+.social-links{display:flex;gap:10px}
+.social-link{width:38px;height:38px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:14px;transition:all .2s;cursor:none}
+.social-link:hover{border-color:var(--accent);color:var(--accent)}
+.footer-col-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text);margin-bottom:16px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s;cursor:none}
+.footer-links a:hover{color:var(--accent)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{color:var(--muted);font-size:12px}
+.payment-icons{display:flex;gap:6px}
+.payment-icon{background:var(--surface2);border:1px solid var(--border);padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px}
+
+/* ── PRODUCT DETAIL ── */
+.pd-back{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:none;background:none;border:none;transition:color .2s;padding:40px 60px 0}
+.pd-back:hover{color:var(--accent)}
+.pd-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:72px;padding:24px 60px 80px;align-items:start}
+.pd-image-box{background:var(--surface2);border:1px solid var(--border);height:500px;display:flex;align-items:center;justify-content:center;font-size:150px;position:relative;overflow:hidden}
+.pd-image-box::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,77,0,.08),transparent 70%)}
+.pd-cat{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+.pd-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,54px);letter-spacing:2px;line-height:1;margin-bottom:14px}
+.pd-rating{display:flex;gap:8px;align-items:center;margin-bottom:20px}
+.pd-price{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--text);margin-bottom:6px}
+.pd-original{font-size:18px;color:var(--muted);text-decoration:line-through;margin-left:10px;vertical-align:middle}
+.pd-savings{display:inline-block;background:var(--green);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 10px;margin-bottom:22px}
+.pd-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.pd-desc{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:22px}
+.pd-attr-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.pd-size-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.size-btn{border:1px solid var(--border);background:transparent;color:var(--text);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;cursor:none;transition:all .2s}
+.size-btn:hover,.size-btn.active{border-color:var(--accent);background:var(--accent);color:#000}
+.pd-qty-row{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.pd-qty-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.pd-qty{display:flex;align-items:center;border:1px solid var(--border)}
+.pd-qty-btn{width:38px;height:38px;background:var(--surface2);border:none;color:var(--text);font-size:16px;cursor:none;transition:background .2s}
+.pd-qty-btn:hover{background:var(--accent);color:#000}
+.pd-qty-num{width:44px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;background:transparent;color:var(--text)}
+.pd-actions{display:flex;gap:10px;margin-bottom:24px}
+.pd-add-btn{flex:1;background:var(--accent);color:#000;border:none;padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:background .2s}
+.pd-add-btn:hover{background:#ff6a2a}
+.pd-buy-btn{flex:1;background:transparent;color:var(--text);border:1px solid var(--border);padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:none;transition:all .2s}
+.pd-buy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.pd-features{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pd-feat{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.pd-feat span:first-child{color:var(--green);font-size:14px}
+
+/* ── CART PAGE ── */
+.cart-page-wrap{padding:60px;min-height:70vh}
+.cart-page-title{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:3px;margin-bottom:6px}
+.cart-page-sub{color:var(--muted);font-size:13px;margin-bottom:40px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+.cart-page-layout{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start}
+.cart-items-list{border:1px solid var(--border)}
+.cart-row{display:grid;grid-template-columns:76px 1fr auto auto;gap:18px;align-items:center;padding:20px;border-bottom:1px solid var(--border);transition:background .2s}
+.cart-row:last-child{border-bottom:none}
+.cart-row:hover{background:var(--surface2)}
+.cart-row-img{width:76px;height:76px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0}
+.cart-row-cat{font-size:11px;color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.cart-row-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.cart-row-unit{font-size:12px;color:var(--muted)}
+.cart-row-qty{display:flex;align-items:center;border:1px solid var(--border)}
+.cq-btn{width:32px;height:32px;background:var(--surface2);border:none;color:var(--text);font-size:15px;cursor:none;transition:all .2s}
+.cq-btn:hover{background:var(--accent);color:#000}
+.cq-num{width:36px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700}
+.cart-row-total{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--accent);text-align:right}
+.cart-row-remove{font-size:12px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;cursor:none;background:none;border:none;letter-spacing:1px;margin-top:4px;transition:color .2s;display:block;text-align:right}
+.cart-row-remove:hover{color:var(--accent)}
+.cart-summary-box{background:var(--card-bg);border:1px solid var(--border);padding:28px;position:sticky;top:80px}
+.cart-sum-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:20px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.sum-row.grand{color:var(--text);font-size:15px;border:none;padding-top:14px}
+.sum-row.grand .sum-val{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent)}
+.promo-wrap{display:flex;margin:16px 0}
+.promo-wrap input{flex:1;background:var(--surface2);border:1px solid var(--border);border-right:none;color:var(--text);padding:10px 12px;font-family:'Barlow',sans-serif;font-size:12px;outline:none}
+.promo-wrap input:focus{border-color:var(--accent)}
+.promo-wrap button{background:var(--accent);border:none;color:#000;padding:0 16px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:none}
+.checkout-big-btn{width:100%;background:var(--accent);color:#000;border:none;padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;transition:background .2s;margin-top:6px}
+.checkout-big-btn:hover{background:#ff6a2a}
+.cart-continue{display:block;text-align:center;margin-top:10px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:none;background:none;border:none;transition:color .2s;width:100%;padding:8px}
+.cart-continue:hover{color:var(--accent)}
+.cart-trust{display:flex;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.cart-trust-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1}
+.cart-trust-item span:first-child{font-size:18px;margin-bottom:4px}
+.cart-trust-item span:last-child{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.empty-cart{text-align:center;padding:80px 40px;color:var(--muted)}
+.empty-cart .empty-icon{font-size:72px;margin-bottom:20px}
+.empty-cart h2{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;margin-bottom:10px;color:var(--text)}
+.empty-cart p{margin-bottom:28px;font-size:14px}
+
+/* ── CHECKOUT ── */
+.checkout-wrap{padding:60px}
+.checkout-grid{display:grid;grid-template-columns:1fr 400px;gap:48px;align-items:start}
+.checkout-title{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:3px;margin-bottom:6px}
+.checkout-sub{color:var(--muted);font-size:13px;margin-bottom:40px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+.checkout-step{margin-bottom:36px}
+.step-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.step-num{width:34px;height:34px;background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.form-field input,.form-field select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:11px 13px;font-family:'Barlow',sans-serif;font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.form-field input:focus,.form-field select:focus{border-color:var(--accent)}
+.form-field select{appearance:none;cursor:none}
+.pay-tabs{display:flex;border:1px solid var(--border);margin-bottom:20px}
+.pay-tab{flex:1;padding:12px;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.pay-tab.active{background:var(--accent);color:#000}
+.pay-tab-content{display:none}
+.pay-tab-content.active{display:block}
+.pay-now-btn{width:100%;background:var(--accent);color:#000;border:none;padding:18px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:background .2s;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px}
+.pay-now-btn:hover{background:#ff6a2a}
+.secure-badge{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;color:var(--muted);font-size:12px}
+.secure-badge .green{color:var(--green)}
+.checkout-order-box{background:var(--card-bg);border:1px solid var(--border);padding:28px;position:sticky;top:80px}
+.order-box-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:20px}
+.order-item-row{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:center}
+.order-item-thumb{width:52px;height:52px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.order-item-info{flex:1}
+.order-item-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600}
+.order-item-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.order-item-price{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)}
+.order-totals{margin-top:16px}
+.ototal-row{display:flex;justify-content:space-between;padding:9px 0;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.ototal-row.grand{color:var(--text);font-size:14px;border:none;padding-top:14px}
+.ototal-row.grand .oval{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--accent)}
+
+/* ── SUCCESS ── */
+.success-page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;padding:60px}
+.success-icon{font-size:72px;margin-bottom:20px;animation:bounceIn .6s ease}
+.success-title{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:3px;margin-bottom:10px;color:var(--green)}
+.success-sub{color:var(--muted);font-size:15px;max-width:460px;line-height:1.7;margin-bottom:10px}
+.success-order{font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--accent);letter-spacing:2px;font-weight:700;margin-bottom:36px}
+@keyframes bounceIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+
+/* ── SEARCH ── */
+.search-modal{position:fixed;inset:0;background:rgba(5,5,5,.97);z-index:8000;display:flex;align-items:flex-start;justify-content:center;padding-top:120px;opacity:0;pointer-events:none;transition:opacity .25s}
+.search-modal.open{opacity:1;pointer-events:all}
+.search-inner{width:100%;max-width:700px;padding:0 24px}
+.search-input-wrap{display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--accent);padding-bottom:14px}
+.search-input-big{flex:1;background:transparent;border:none;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:34px;letter-spacing:1px;outline:none}
+.search-input-big::placeholder{color:var(--border)}
+.search-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:none;transition:color .2s}
+.search-close:hover{color:var(--accent)}
+.search-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.search-tag{border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:none;background:none;transition:all .2s}
+.search-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface);border:1px solid var(--green);padding:14px 20px;z-index:99999;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{color:var(--green);font-size:18px}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .explore-grid{grid-template-columns:repeat(2,1fr)}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .cart-page-layout{grid-template-columns:1fr}
+  .checkout-grid{grid-template-columns:1fr}
+  .category-layout{grid-template-columns:1fr}
+  .filter-sidebar{position:static}
+}
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hero{padding:0 24px;min-height:80vh;flex-direction:column}
+  .hero-stats{position:static;margin-top:32px;gap:28px}
+  .section-wrap{padding:60px 24px}
+  .explore-grid{grid-template-columns:1fr}
+  .product-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .deals-banner{flex-direction:column}
+  .hero h1{font-size:64px}
+  .pd-wrapper{grid-template-columns:1fr;padding:0 24px 60px}
+  .pd-back{padding:32px 24px 0}
+  .cart-page-wrap{padding:40px 24px}
+  .checkout-wrap{padding:40px 24px}
+  .form-grid{grid-template-columns:1fr}
+  .breadcrumb{padding:16px 24px}
+  .cat-page-hero{padding:40px 24px 28px}
+  .explore-hero{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div class="toast" id="toast"><span class="toast-icon">✓</span><span id="toast-msg"></span></div>
+
+<div class="search-modal" id="searchModal">
+  <div class="search-inner">
+    <div class="search-input-wrap">
+      <span style="font-size:22px;color:var(--accent)">🔍</span>
+      <input type="text" class="search-input-big" placeholder="Search gear, sports, brands..." id="searchInput" oninput="liveSearch(this.value)">
+      <button class="search-close" onclick="closeSearch()">✕</button>
+    </div>
+    <div class="search-tags">
+      <button class="search-tag" onclick="doSearch('climbing')">Climbing</button>
+      <button class="search-tag" onclick="doSearch('kayaking')">Kayaking</button>
+      <button class="search-tag" onclick="doSearch('trekking')">Trekking</button>
+      <button class="search-tag" onclick="doSearch('surfing')">Surfing</button>
+      <button class="search-tag" onclick="doSearch('cycling')">Cycling</button>
+      <button class="search-tag" onclick="doSearch('skydiving')">Skydiving</button>
+    </div>
+    <div id="searchResults" style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE: HOME ═══════════════════════ -->
+<div class="page active" id="page-home">
+  <div class="topbar">🔥 SEASON 2026 COLLECTION IS HERE · FREE SHIPPING ABOVE ₹3000 · CODE <strong>APEX20</strong> FOR 20% OFF</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goHome()">Home</a></li>
+      <li><a onclick="goExplore()">Explore</a></li>
+      <li><a onclick="goHome(); setTimeout(()=>document.getElementById('deals').scrollIntoView({behavior:'smooth'}),100)">Deals</a></li>
+      <li><a onclick="goHome(); setTimeout(()=>document.getElementById('testimonials').scrollIntoView({behavior:'smooth'}),100)">Reviews</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" onclick="openSearch()">🔍</button>
+      <button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc1">0</span></button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">⛰ Season 2026 Collection</div>
+      <h1>GEAR UP<br><span class="acc">FOR THE</span><br>EXTREME</h1>
+      <p>Professional-grade equipment for climbing, kayaking, paragliding, skydiving, and every adventure that makes your heart race.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goExplore()">Explore Sports →</button>
+        <button class="btn-outline" onclick="goHome(); setTimeout(()=>document.getElementById('featured').scrollIntoView({behavior:'smooth'}),100)">Shop Now</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Products</div></div>
+      <div class="stat-item"><div class="stat-num">40K+</div><div class="stat-label">Athletes</div></div>
+      <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Countries</div></div>
+    </div>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      CLIMBING &nbsp;<span>✦</span>&nbsp; KAYAKING &nbsp;<span>✦</span>&nbsp; PARAGLIDING &nbsp;<span>✦</span>&nbsp; SKYDIVING &nbsp;<span>✦</span>&nbsp; TREKKING &nbsp;<span>✦</span>&nbsp; SURFING &nbsp;<span>✦</span>&nbsp; MOUNTAIN BIKING &nbsp;<span>✦</span>&nbsp; BUNGEE JUMPING &nbsp;<span>✦</span>&nbsp; WHITE WATER RAFTING &nbsp;<span>✦</span>&nbsp;
+      CLIMBING &nbsp;<span>✦</span>&nbsp; KAYAKING &nbsp;<span>✦</span>&nbsp; PARAGLIDING &nbsp;<span>✦</span>&nbsp; SKYDIVING &nbsp;<span>✦</span>&nbsp; TREKKING &nbsp;<span>✦</span>&nbsp; SURFING &nbsp;<span>✦</span>&nbsp; MOUNTAIN BIKING &nbsp;<span>✦</span>&nbsp; BUNGEE JUMPING &nbsp;<span>✦</span>&nbsp; WHITE WATER RAFTING &nbsp;<span>✦</span>&nbsp;
+    </div>
+  </div>
+
+  <!-- SHOP BY SPORT (mini) -->
+  <div class="section-wrap" style="background:var(--surface)">
+    <div class="section-header">
+      <div><div class="section-label">// Explore By Sport</div><h2 class="section-title">SHOP BY CATEGORY</h2></div>
+      <button class="btn-outline" onclick="goExplore()">All Categories →</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+      <div onclick="goCategoryPage('climbing')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s,background .25s;position:relative;overflow:hidden" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🧗</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Climbing</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">86 Products</div>
+      </div>
+      <div onclick="goCategoryPage('kayaking')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🚣</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Kayaking</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">54 Products</div>
+      </div>
+      <div onclick="goCategoryPage('skydiving')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🪂</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Skydiving</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">32 Products</div>
+      </div>
+      <div onclick="goCategoryPage('trekking')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🥾</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Trekking</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">118 Products</div>
+      </div>
+      <div onclick="goCategoryPage('surfing')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🏄</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Surfing</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">67 Products</div>
+      </div>
+      <div onclick="goCategoryPage('cycling')" style="background:var(--card-bg);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:none;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+        <div style="font-size:38px;margin-bottom:10px">🚵</div>
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase">MTB Cycling</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">91 Products</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-strip">
+    <div class="features-grid">
+      <div><div class="feature-icon">🚚</div><div class="feature-title">Free Shipping</div><div class="feature-desc">On all orders above ₹3,000. Pan-India 3-5 days.</div></div>
+      <div><div class="feature-icon">🔒</div><div class="feature-title">Secure Payments</div><div class="feature-desc">256-bit SSL. UPI, Cards, Net Banking, Wallets.</div></div>
+      <div><div class="feature-icon">✅</div><div class="feature-title">Certified Gear</div><div class="feature-desc">All safety equipment meets international standards.</div></div>
+      <div><div class="feature-icon">↩️</div><div class="feature-title">Easy Returns</div><div class="feature-desc">30-day hassle-free return on unused items.</div></div>
+    </div>
+  </div>
+
+  <!-- FEATURED PRODUCTS -->
+  <div class="section-wrap" id="featured">
+    <div class="section-header">
+      <div><div class="section-label">// Bestsellers</div><h2 class="section-title">FEATURED GEAR</h2></div>
+      <button class="btn-outline" onclick="goExplore()">Shop All →</button>
+    </div>
+    <div class="product-grid" id="homeProductGrid"></div>
+  </div>
+
+  <!-- DEALS -->
+  <section class="deals-banner" id="deals">
+    <div class="deals-content">
+      <h2>SEASON END<br>MEGA SALE</h2>
+      <p>Up to 60% off on selected adventure gear. Limited time only.</p>
+      <button class="btn-outline" style="margin-top:18px;border-color:#000;color:#000;" onclick="goExplore()">Shop Sale →</button>
+    </div>
+    <div class="countdown">
+      <div class="count-unit"><div class="count-num" id="cd-h">08</div><div class="count-label">Hours</div></div>
+      <div class="count-unit"><div class="count-num" id="cd-m">24</div><div class="count-label">Mins</div></div>
+      <div class="count-unit"><div class="count-num" id="cd-s">00</div><div class="count-label">Secs</div></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <div class="section-wrap" id="testimonials" style="background:var(--surface)">
+    <div class="section-header"><div><div class="section-label">// Customer Love</div><h2 class="section-title">TRAIL TALES</h2></div></div>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"The APEX harness saved my life on a route in Spiti Valley. Zero compromise on quality. Nothing comes close to the build and comfort."</p><div class="reviewer"><div class="reviewer-avatar">🧗</div><div><div class="reviewer-name">Arjun Mehta</div><div class="reviewer-tag">Rock Climber · Himachal</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Ordered a kayak paddle and wetsuit — arrived within 4 days, fully certified. Customer support helped me pick the right size. Highly recommend!"</p><div class="reviewer"><div class="reviewer-avatar">🚣</div><div><div class="reviewer-name">Priya Kapoor</div><div class="reviewer-tag">Kayaker · Rishikesh</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Best mountain biking gear online in India. Helmet fit perfectly, shipping was fast. APEX is my go-to for all adventure gear now."</p><div class="reviewer"><div class="reviewer-avatar">🚵</div><div><div class="reviewer-name">Siddharth Rao</div><div class="reviewer-tag">MTB Rider · Bangalore</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- BRANDS -->
+  <div class="section-wrap">
+    <div class="section-header"><div><div class="section-label">// Partners</div><h2 class="section-title">TOP BRANDS</h2></div></div>
+    <div class="brands-row">
+      <div class="brand-logo">BLACK DIAMOND</div><div class="brand-logo">PETZL</div><div class="brand-logo">OSPREY</div>
+      <div class="brand-logo">PATAGONIA</div><div class="brand-logo">MAMMUT</div><div class="brand-logo">SALOMON</div>
+    </div>
+  </div>
+
+  <div class="newsletter">
+    <h2>JOIN THE TRIBE</h2>
+    <p>Get early access to new gear drops, exclusive discounts, and adventure tips.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="your@email.com">
+      <button onclick="showToast('Thanks for subscribing! 🏔')">Subscribe</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">APEX<span>GEAR</span></div>
+        <p class="footer-desc">Your trusted partner for professional adventure sports equipment. From base camp to summit, we equip the boldest explorers.</p>
+        <div class="social-links"><a class="social-link" href="#">in</a><a class="social-link" href="#">tw</a><a class="social-link" href="#">ig</a><a class="social-link" href="#">yt</a></div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <ul class="footer-links">
+          <li><a onclick="goHome()">Home</a></li>
+          <li><a onclick="goExplore()">Explore</a></li>
+          <li><a onclick="goCart()">Cart</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Sports</div>
+        <ul class="footer-links">
+          <li><a onclick="goCategoryPage('climbing')">Climbing</a></li>
+          <li><a onclick="goCategoryPage('kayaking')">Kayaking</a></li>
+          <li><a onclick="goCategoryPage('trekking')">Trekking</a></li>
+          <li><a onclick="goCategoryPage('surfing')">Surfing</a></li>
+          <li><a onclick="goCategoryPage('cycling')">MTB Cycling</a></li>
+          <li><a onclick="goCategoryPage('skydiving')">Skydiving</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 APEX GEAR. All rights reserved.</div>
+      <div class="payment-icons"><div class="payment-icon">VISA</div><div class="payment-icon">MC</div><div class="payment-icon">UPI</div><div class="payment-icon">PAYTM</div><div class="payment-icon">RUPAY</div></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: EXPLORE ═══════════════════════ -->
+<div class="page" id="page-explore">
+  <div class="topbar">🔥 FREE SHIPPING ABOVE ₹3000 · CODE <strong>APEX20</strong> FOR 20% OFF</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goHome()">Home</a></li>
+      <li><a class="active-link" onclick="goExplore()">Explore</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" onclick="openSearch()">🔍</button>
+      <button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc2">0</span></button>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <button onclick="goHome()">Home</button>
+    <span>›</span>
+    <span>Explore All Sports</span>
+  </div>
+
+  <div class="explore-hero">
+    <div class="section-label">// All Categories</div>
+    <h1>EXPLORE SPORTS</h1>
+    <p>From high altitude climbing to deep water kayaking — find your sport and the gear that takes you further. Every category has expert-curated equipment for beginners and professionals alike.</p>
+  </div>
+
+  <div class="section-wrap">
+    <div class="explore-grid" id="exploreGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <div class="features-strip">
+    <div class="features-grid">
+      <div><div class="feature-icon">🚚</div><div class="feature-title">Free Shipping</div><div class="feature-desc">On all orders above ₹3,000.</div></div>
+      <div><div class="feature-icon">🔒</div><div class="feature-title">Secure Payments</div><div class="feature-desc">256-bit SSL encryption.</div></div>
+      <div><div class="feature-icon">✅</div><div class="feature-title">Certified Gear</div><div class="feature-desc">International safety standards.</div></div>
+      <div><div class="feature-icon">↩️</div><div class="feature-title">Easy Returns</div><div class="feature-desc">30-day hassle-free returns.</div></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">APEX<span>GEAR</span></div>
+        <p class="footer-desc">Your trusted partner for professional adventure sports equipment.</p>
+        <div class="social-links"><a class="social-link" href="#">in</a><a class="social-link" href="#">ig</a><a class="social-link" href="#">yt</a></div>
+      </div>
+      <div>
+        <div class="footer-col-title">Sports</div>
+        <ul class="footer-links">
+          <li><a onclick="goCategoryPage('climbing')">Climbing</a></li>
+          <li><a onclick="goCategoryPage('kayaking')">Kayaking</a></li>
+          <li><a onclick="goCategoryPage('trekking')">Trekking</a></li>
+          <li><a onclick="goCategoryPage('surfing')">Surfing</a></li>
+          <li><a onclick="goCategoryPage('cycling')">MTB Cycling</a></li>
+          <li><a onclick="goCategoryPage('skydiving')">Skydiving</a></li>
+        </ul>
+      </div>
+      <div><div class="footer-col-title">Support</div><ul class="footer-links"><li><a href="#">Track Order</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
+      <div><div class="footer-col-title">Company</div><ul class="footer-links"><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 APEX GEAR. All rights reserved.</div>
+      <div class="payment-icons"><div class="payment-icon">VISA</div><div class="payment-icon">MC</div><div class="payment-icon">UPI</div><div class="payment-icon">RUPAY</div></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: CATEGORY ═══════════════════════ -->
+<div class="page" id="page-category">
+  <div class="topbar">🔥 FREE SHIPPING ABOVE ₹3000 · CODE <strong>APEX20</strong> FOR 20% OFF</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goHome()">Home</a></li>
+      <li><a onclick="goExplore()">Explore</a></li>
+      <li><a id="catNavLink" class="active-link">Climbing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" onclick="openSearch()">🔍</button>
+      <button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc3">0</span></button>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <button onclick="goHome()">Home</button>
+    <span>›</span>
+    <button onclick="goExplore()">Explore</button>
+    <span>›</span>
+    <span id="catBreadcrumb">Climbing</span>
+  </div>
+
+  <div class="cat-page-hero" id="catPageHero">
+    <!-- Injected by JS -->
+  </div>
+
+  <div class="section-wrap">
+    <div class="category-layout">
+      <!-- SIDEBAR -->
+      <div class="filter-sidebar">
+        <h3>FILTER</h3>
+        <div class="filter-group">
+          <div class="filter-group-title">Price Range</div>
+          <button class="filter-option active" onclick="applyPriceFilter('all',this)"><span class="check">✓</span>All Prices</button>
+          <button class="filter-option" onclick="applyPriceFilter('under5k',this)"><span class="check"></span>Under ₹5,000</button>
+          <button class="filter-option" onclick="applyPriceFilter('5k-10k',this)"><span class="check"></span>₹5,000 – ₹10,000</button>
+          <button class="filter-option" onclick="applyPriceFilter('above10k',this)"><span class="check"></span>Above ₹10,000</button>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Availability</div>
+          <button class="filter-option active" id="filterBadgeAll" onclick="applyBadgeFilter('all',this)"><span class="check">✓</span>All Items</button>
+          <button class="filter-option" id="filterBadgeSale" onclick="applyBadgeFilter('sale',this)"><span class="check"></span>On Sale</button>
+          <button class="filter-option" id="filterBadgeNew" onclick="applyBadgeFilter('new',this)"><span class="check"></span>New Arrivals</button>
+          <button class="filter-option" id="filterBadgeHot" onclick="applyBadgeFilter('hot',this)"><span class="check"></span>🔥 Trending</button>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group-title">Sort By</div>
+          <select class="sort-select" onchange="applySort(this.value)">
+            <option value="default">Featured</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        <div class="filter-group" style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px">
+          <div class="filter-group-title">Other Sports</div>
+          <div id="otherSportsLinks"></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div>
+        <div class="results-bar">
+          <span class="results-count" id="resultsCount">12 products</span>
+          <div style="display:flex;gap:10px;align-items:center;font-family:Barlow Condensed,sans-serif;font-size:13px;color:var(--muted)">
+            Showing all results
+          </div>
+        </div>
+        <div class="product-grid" id="catProductGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">APEX<span>GEAR</span></div>
+        <p class="footer-desc">Your trusted partner for professional adventure sports equipment.</p>
+        <div class="social-links"><a class="social-link" href="#">in</a><a class="social-link" href="#">ig</a><a class="social-link" href="#">yt</a></div>
+      </div>
+      <div><div class="footer-col-title">Sports</div><ul class="footer-links"><li><a onclick="goCategoryPage('climbing')">Climbing</a></li><li><a onclick="goCategoryPage('kayaking')">Kayaking</a></li><li><a onclick="goCategoryPage('trekking')">Trekking</a></li><li><a onclick="goCategoryPage('surfing')">Surfing</a></li><li><a onclick="goCategoryPage('cycling')">MTB Cycling</a></li><li><a onclick="goCategoryPage('skydiving')">Skydiving</a></li></ul></div>
+      <div><div class="footer-col-title">Support</div><ul class="footer-links"><li><a href="#">Track Order</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
+      <div><div class="footer-col-title">Company</div><ul class="footer-links"><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 APEX GEAR. All rights reserved.</div>
+      <div class="payment-icons"><div class="payment-icon">VISA</div><div class="payment-icon">MC</div><div class="payment-icon">UPI</div><div class="payment-icon">RUPAY</div></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ PAGE: PRODUCT DETAIL ═══════════════════════ -->
+<div class="page" id="page-product">
+  <div class="topbar">🔥 FREE SHIPPING ABOVE ₹3000 · CODE <strong>APEX20</strong> FOR 20% OFF</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goHome()">Home</a></li>
+      <li><a onclick="goExplore()">Explore</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" onclick="openSearch()">🔍</button>
+      <button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc4">0</span></button>
+    </div>
+  </nav>
+
+  <div class="breadcrumb" id="pdBreadcrumb"></div>
+  <div class="pd-wrapper" id="pdWrapper"></div>
+
+  <div class="section-wrap" id="relatedSection" style="background:var(--surface)">
+    <div class="section-header"><div><div class="section-label">// You May Also Like</div><h2 class="section-title">RELATED GEAR</h2></div></div>
+    <div class="product-grid" id="relatedGrid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE: CART ═══════════════════════ -->
+<div class="page" id="page-cart">
+  <div class="topbar">🛒 REVIEW YOUR GEAR · FREE SHIPPING ABOVE ₹3000</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goHome()">Home</a></li>
+      <li><a onclick="goExplore()">Explore</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc5">0</span></button>
+    </div>
+  </nav>
+  <div class="breadcrumb"><button onclick="goHome()">Home</button><span>›</span><span>Cart</span></div>
+
+  <div class="cart-page-wrap">
+    <div class="cart-page-title">YOUR CART</div>
+    <div class="cart-page-sub" id="cartPageSub">0 items</div>
+    <div id="cartPageEmpty" class="empty-cart" style="display:none">
+      <div class="empty-icon">🛒</div>
+      <h2>YOUR CART IS EMPTY</h2>
+      <p>Looks like you haven't added any gear yet.</p>
+      <button class="btn-primary" onclick="goExplore()">Explore Gear →</button>
+    </div>
+    <div class="cart-page-layout" id="cartPageLayout">
+      <div class="cart-items-list" id="cartItemsList"></div>
+      <div class="cart-summary-box">
+        <div class="cart-sum-title">ORDER SUMMARY</div>
+        <div class="sum-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+        <div class="sum-row"><span>Shipping</span><span style="color:var(--green)">FREE</span></div>
+        <div class="sum-row"><span>Discount</span><span style="color:var(--green)" id="sumDiscount">₹0</span></div>
+        <div class="sum-row grand"><span>Grand Total</span><span class="sum-val" id="sumTotal">₹0</span></div>
+        <div class="promo-wrap">
+          <input type="text" placeholder="Promo code (try APEX20)" id="cartPromoInput">
+          <button onclick="applyCartPromo()">Apply</button>
+        </div>
+        <button class="checkout-big-btn" onclick="goCheckout()">⚡ Proceed to Checkout</button>
+        <button class="cart-continue" onclick="goExplore()">← Continue Shopping</button>
+        <div class="cart-trust">
+          <div class="cart-trust-item"><span>🔒</span><span>Secure</span></div>
+          <div class="cart-trust-item"><span>🚚</span><span>Fast Ship</span></div>
+          <div class="cart-trust-item"><span>↩️</span><span>Returns</span></div>
+          <div class="cart-trust-item"><span>✅</span><span>Certified</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE: CHECKOUT ═══════════════════════ -->
+<div class="page" id="page-checkout">
+  <div class="topbar">🔒 SECURE CHECKOUT · 256-BIT SSL ENCRYPTED</div>
+  <nav>
+    <a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a>
+    <ul class="nav-links"><li><a onclick="goCart()">← Back to Cart</a></li></ul>
+    <div class="nav-actions"><button class="nav-icon" style="position:relative" onclick="goCart()">🛒<span class="cart-badge" id="cc6">0</span></button></div>
+  </nav>
+  <div class="breadcrumb"><button onclick="goHome()">Home</button><span>›</span><button onclick="goCart()">Cart</button><span>›</span><span>Checkout</span></div>
+
+  <div class="checkout-wrap">
+    <div class="checkout-title">CHECKOUT</div>
+    <div class="checkout-sub">Secure · Fast · Easy</div>
+    <div class="checkout-grid">
+      <div>
+        <div class="checkout-step">
+          <div class="step-header"><div class="step-num">1</div><div class="step-name">DELIVERY DETAILS</div></div>
+          <div class="form-grid">
+            <div class="form-field"><label>First Name</label><input type="text" placeholder="Arjun"></div>
+            <div class="form-field"><label>Last Name</label><input type="text" placeholder="Mehta"></div>
+            <div class="form-field"><label>Email</label><input type="email" placeholder="arjun@example.com"></div>
+            <div class="form-field"><label>Phone</label><input type="tel" placeholder="98765 43210"></div>
+            <div class="form-field full"><label>Address</label><input type="text" placeholder="Flat 4B, Mountain View Apartments"></div>
+            <div class="form-field"><label>City</label><input type="text" placeholder="Dehradun"></div>
+            <div class="form-field"><label>State</label><select><option>Uttarakhand</option><option>Delhi</option><option>Maharashtra</option><option>Karnataka</option><option>Rajasthan</option><option>Himachal Pradesh</option></select></div>
+            <div class="form-field"><label>PIN Code</label><input type="text" placeholder="248001" maxlength="6"></div>
+            <div class="form-field"><label>Country</label><select><option>India</option></select></div>
+          </div>
+        </div>
+        <div class="checkout-step">
+          <div class="step-header"><div class="step-num">2</div><div class="step-name">PAYMENT METHOD</div></div>
+          <div class="pay-tabs">
+            <button class="pay-tab active" onclick="switchPayTab('card',this)">💳 Card</button>
+            <button class="pay-tab" onclick="switchPayTab('upi',this)">📱 UPI</button>
+            <button class="pay-tab" onclick="switchPayTab('netbanking',this)">🏦 Net Banking</button>
+            <button class="pay-tab" onclick="switchPayTab('wallet',this)">👛 Wallet</button>
+          </div>
+          <div class="pay-tab-content active" id="ptab-card">
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <span style="background:var(--surface2);border:1px solid var(--border);padding:5px 10px;font-family:Barlow Condensed;font-size:11px;font-weight:700;color:var(--muted)">VISA</span>
+              <span style="background:var(--surface2);border:1px solid var(--border);padding:5px 10px;font-family:Barlow Condensed;font-size:11px;font-weight:700;color:var(--muted)">MASTERCARD</span>
+              <span style="background:var(--surface2);border:1px solid var(--border);padding:5px 10px;font-family:Barlow Condensed;font-size:11px;font-weight:700;color:var(--muted)">AMEX</span>
+              <span style="background:var(--surface2);border:1px solid var(--border);padding:5px 10px;font-family:Barlow Condensed;font-size:11px;font-weight:700;color:var(--muted)">RUPAY</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-field full"><label>Card Number</label><input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+              <div class="form-field full"><label>Cardholder Name</label><input type="text" placeholder="ARJUN MEHTA"></div>
+              <div class="form-field"><label>Expiry</label><input type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"></div>
+              <div class="form-field"><label>CVV</label><input type="password" placeholder="•••" maxlength="4"></div>
+            </div>
+          </div>
+          <div class="pay-tab-content" id="ptab-upi">
+            <div class="form-grid"><div class="form-field full"><label>UPI ID</label><input type="text" placeholder="yourname@upi"></div></div>
+            <p style="color:var(--muted);font-size:13px;margin-top:8px">Supported: PhonePe, Google Pay, Paytm, BHIM UPI</p>
+          </div>
+          <div class="pay-tab-content" id="ptab-netbanking">
+            <div class="form-grid"><div class="form-field full"><label>Select Bank</label><select><option>State Bank of India</option><option>HDFC Bank</option><option>ICICI Bank</option><option>Axis Bank</option><option>Kotak Mahindra Bank</option></select></div></div>
+            <p style="color:var(--muted);font-size:13px;margin-top:8px">You will be redirected to your bank's secure portal.</p>
+          </div>
+          <div class="pay-tab-content" id="ptab-wallet">
+            <div class="form-grid">
+              <div class="form-field"><label>Wallet</label><select><option>Paytm</option><option>PhonePe</option><option>Amazon Pay</option><option>MobiKwik</option></select></div>
+              <div class="form-field"><label>Mobile</label><input type="tel" placeholder="98765 43210" maxlength="10"></div>
+            </div>
+          </div>
+          <button class="pay-now-btn" onclick="processPayment()"><span>🔒</span> PAY NOW — <span id="payBtnTotal">₹0</span></button>
+          <div class="secure-badge">🔐 256-bit SSL Secured by <span class="green">&nbsp;RazorPay</span>&nbsp;&amp;&nbsp;<span class="green">Stripe</span></div>
+        </div>
+      </div>
+      <div class="checkout-order-box">
+        <div class="order-box-title">ORDER SUMMARY</div>
+        <div id="checkoutOrderItems"></div>
+        <div class="order-totals">
+          <div class="ototal-row"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
+          <div class="ototal-row"><span>Shipping</span><span style="color:var(--green)">FREE</span></div>
+          <div class="ototal-row"><span>Discount</span><span style="color:var(--green)" id="coDiscount">₹0</span></div>
+          <div class="ototal-row grand"><span>Total</span><span class="oval" id="coTotal">₹0</span></div>
+        </div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🔒</span><div><div style="font-family:Barlow Condensed;font-size:13px;font-weight:700;letter-spacing:1px">SECURE TRANSACTION</div><div style="font-size:11px;color:var(--muted)">Your data is protected</div></div></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🚚</span><div><div style="font-family:Barlow Condensed;font-size:13px;font-weight:700;letter-spacing:1px">FAST DELIVERY</div><div style="font-size:11px;color:var(--muted)">Ships within 24 hours</div></div></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">↩️</span><div><div style="font-family:Barlow Condensed;font-size:13px;font-weight:700;letter-spacing:1px">EASY RETURNS</div><div style="font-size:11px;color:var(--muted)">30-day hassle-free</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE: SUCCESS ═══════════════════════ -->
+<div class="page" id="page-success">
+  <div class="topbar">🎉 ORDER CONFIRMED — APEX GEAR</div>
+  <nav><a class="nav-logo" onclick="goHome()">APEX<span>GEAR</span></a></nav>
+  <div class="success-page">
+    <div class="success-icon">📦</div>
+    <div class="success-title">ORDER CONFIRMED!</div>
+    <p class="success-sub">Your adventure gear is packed and ready to ship. You'll receive a tracking email shortly.</p>
+    <div class="success-order" id="successOrderId">ORDER #APEX-2026-XXXX</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+      <button class="btn-primary" onclick="goHome()">Continue Shopping →</button>
+      <button class="btn-outline" onclick="showToast('📧 Tracking email sent!')">Track Order</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
+  setTimeout(() => { ring.style.left = e.clientX+'px'; ring.style.top = e.clientY+'px'; }, 60);
+});
+
+// ── DATA ────────────────────────────────────────────────────
+const categories = {
+  climbing: {
+    name:'Climbing', emoji:'🧗', color:'#ff4d00',
+    desc:'Conquer vertical terrain with professional-grade climbing equipment. From beginner-friendly gear to advanced alpine tools — safety is paramount.',
+    longDesc:'Whether you\'re a gym climber or an alpine mountaineer, our climbing gear collection covers every style and level. All equipment is CE EN and UIAA certified.',
+    count:86, tags:['Ropes','Harnesses','Helmets','Carabiners','Chalk Bags','Cams','Shoes'],
+    banner:'High-altitude performance gear'
+  },
+  kayaking: {
+    name:'Kayaking', emoji:'🚣', color:'#0088ff',
+    desc:'Navigate rivers, lakes and open seas with expert kayaking gear. From inflatable kayaks to carbon paddles — built for every water condition.',
+    longDesc:'Our kayaking range covers everything from flatwater touring to whitewater rapids. All boats and accessories are rigorously tested for durability and performance.',
+    count:54, tags:['Kayaks','Paddles','PFDs','Wetsuits','Dry Bags','Helmets','Leashes'],
+    banner:'Master every waterway'
+  },
+  trekking: {
+    name:'Trekking', emoji:'🥾', color:'#4caf50',
+    desc:'Hit the trails in comfort and confidence. Our trekking collection has boots, packs, poles and all-weather apparel for every terrain and season.',
+    longDesc:'From day hikes to multi-week expeditions, our trekking gear is built to handle it all. Featuring top brands like Salomon, Osprey, and Black Diamond.',
+    count:118, tags:['Boots','Backpacks','Poles','Gaiters','Headlamps','Sleeping Bags','Tents'],
+    banner:'Every trail, every season'
+  },
+  surfing: {
+    name:'Surfing', emoji:'🏄', color:'#00bcd4',
+    desc:'Ride the waves with professional surfing gear. Wetsuits, boards, leashes and accessories — designed for performance in all water conditions.',
+    longDesc:'From beginner softboards to pro shortboards, we have everything to get you on the water and shredding. All surf apparel is made from eco-friendly materials.',
+    count:67, tags:['Boards','Wetsuits','Leashes','Fins','Wax','Rashguards','Bags'],
+    banner:'Ride every swell'
+  },
+  cycling: {
+    name:'MTB Cycling', emoji:'🚵', color:'#ff9800',
+    desc:'Dominate singletrack and mountain trails with our MTB gear collection. Helmets, shoes, apparel and components for all riding styles.',
+    longDesc:'Whether you\'re hitting downhill runs or cross-country racing, our MTB range has the protection and performance gear to push your limits.',
+    count:91, tags:['Helmets','Shoes','Gloves','Jerseys','Shorts','Goggles','Body Armour'],
+    banner:'Shred every trail'
+  },
+  skydiving: {
+    name:'Skydiving', emoji:'🪂', color:'#9c27b0',
+    desc:'Leap into the sky with certified, professional-grade skydiving equipment. AAD units, jumpsuits, altimeters and training gear for every jump level.',
+    longDesc:'Our skydiving equipment is sourced from the world\'s most trusted manufacturers. Every product is FAA/TSO certified and meets international safety standards.',
+    count:32, tags:['AAD Units','Jumpsuits','Altimeters','Helmets','Gloves','Audible Altimeters'],
+    banner:'Certified for every altitude'
+  }
+};
+
+// ── BACKEND CONFIG ───────────────────────────────────────────
+const API_BASE = 'http://localhost:8080';
+
+// ── VISUAL EXTRAS LOOKUP (emoji, badge, stars, etc. keyed by product id) ──
+// Backend only stores: id, name, category, price, description
+// Frontend enriches with visual data from this map (falls back to defaults)
+const VISUAL_EXTRAS = {
+  1:  { emoji:'⛑️',  badge:'sale', stars:'★★★★★', reviews:142, stock:24, original:5499, sizes:['S','M','L','XL'] },
+  2:  { emoji:'🧗',  badge:'hot',  stars:'★★★★★', reviews:98,  stock:15, original:null,  sizes:['XS','S','M','L','XL'] },
+  3:  { emoji:'🔗',  badge:'sale', stars:'★★★★☆', reviews:215, stock:60, original:2499,  sizes:['One Size'] },
+  4:  { emoji:'🚣',  badge:'new',  stars:'★★★★★', reviews:57,  stock:8,  original:34999, sizes:['One Size'] },
+  5:  { emoji:'🏓',  badge:null,   stars:'★★★★☆', reviews:81,  stock:19, original:null,  sizes:['220cm','230cm','240cm'] },
+  6:  { emoji:'🤿',  badge:'sale', stars:'★★★★★', reviews:63,  stock:33, original:7999,  sizes:['XS','S','M','L','XL','XXL'] },
+  7:  { emoji:'🥾',  badge:'new',  stars:'★★★★★', reviews:189, stock:41, original:null,  sizes:['UK 6','UK 7','UK 8','UK 9','UK 10','UK 11'] },
+  8:  { emoji:'🎒',  badge:'sale', stars:'★★★★★', reviews:302, stock:12, original:17999, sizes:['S/M','M/L'] },
+  9:  { emoji:'🚵',  badge:'hot',  stars:'★★★★☆', reviews:74,  stock:28, original:null,  sizes:['S','M','L','XL'] },
+  10: { emoji:'👟',  badge:'sale', stars:'★★★★☆', reviews:91,  stock:36, original:6999,  sizes:['EU 40','EU 41','EU 42','EU 43','EU 44','EU 45'] },
+  11: { emoji:'🪂',  badge:'new',  stars:'★★★★★', reviews:28,  stock:5,  original:null,  sizes:['One Size'] },
+  12: { emoji:'🏄',  badge:'sale', stars:'★★★★☆', reviews:155, stock:72, original:1799,  sizes:['One Size'] },
+};
+
+// Category emoji map for new products from backend
+const CAT_EMOJI = { climbing:'🧗', kayaking:'🚣', trekking:'🥾', surfing:'🏄', cycling:'🚵', skydiving:'🪂' };
+
+// ── MAP backend product → frontend product ───────────────────
+function mapProduct(p) {
+  const extra = VISUAL_EXTRAS[p.id] || {};
+  return {
+    id:       p.id,
+    name:     p.name,
+    cat:      (p.category || '').toLowerCase(),
+    price:    p.price,
+    desc:     p.description,
+    emoji:    extra.emoji  || CAT_EMOJI[(p.category||'').toLowerCase()] || '🏔️',
+    badge:    extra.badge  ?? null,
+    stars:    extra.stars  || '★★★★☆',
+    reviews:  extra.reviews|| 0,
+    stock:    extra.stock  || 10,
+    original: extra.original || null,
+    sizes:    extra.sizes  || ['One Size'],
+  };
+}
+
+// ── API HELPERS ──────────────────────────────────────────────
+async function apiFetch(path, options = {}) {
+  try {
+    const res = await fetch(API_BASE + path, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  } catch (err) {
+    console.error('API error:', err);
+    showToast('⚠️ Backend error: ' + err.message);
+    return null;
+  }
+}
+
+async function loadProducts() {
+  const data = await apiFetch('/products');
+  if (data && Array.isArray(data)) return data.map(mapProduct);
+  // fallback to localStorage cache if backend is unreachable
+  try { const s = localStorage.getItem('apexgear_products'); return s ? JSON.parse(s) : []; } catch(e){ return []; }
+}
+
+async function saveProducts(updatedList) {
+  // Persist to localStorage as a local cache
+  try { localStorage.setItem('apexgear_products', JSON.stringify(updatedList)); } catch(e){}
+  // No bulk PUT on this backend — individual updates go through updateProductOnBackend()
+}
+
+async function addProductToBackend(p) {
+  // Sends: { id, name, category, price, description }
+  return await apiFetch('/products', {
+    method: 'POST',
+    body: JSON.stringify({ id: p.id, name: p.name, category: p.cat, price: p.price, description: p.desc }),
+  });
+}
+
+async function updateProductOnBackend(id, p) {
+  return await apiFetch(`/products/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ id: p.id, name: p.name, category: p.cat, price: p.price, description: p.desc }),
+  });
+}
+
+async function deleteProductFromBackend(id) {
+  return await apiFetch(`/products/${id}`, { method: 'DELETE' });
+}
+
+// ── INIT: load products from backend ────────────────────────
+let products = [];
+(async () => {
+  showToast('⏳ Loading products...');
+  products = await loadProducts();
+  if (products.length) {
+    localStorage.setItem('apexgear_products', JSON.stringify(products));
+    showToast('✅ Products loaded from backend!');
+  } else {
+    showToast('⚠️ Could not reach backend — showing cached data');
+  }
+  renderHomeProducts();
+  renderExplorePage();
+})();
+
+// Reload products from backend whenever tab becomes visible
+document.addEventListener('visibilitychange', async () => {
+  if (!document.hidden) {
+    products = await loadProducts();
+    renderHomeProducts();
+  }
+});
+
+let cart = [], cartPromoApplied = false, selectedPdQty = 1, selectedSize = '';
+let currentCat = 'climbing', currentPriceFilter = 'all', currentBadgeFilter = 'all', currentSort = 'default';
+let prevPage = 'home'; // track where to go back from product page
+
+// ── PAGE NAVIGATION ─────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome() { showPage('page-home'); }
+function goExplore() { renderExplorePage(); showPage('page-explore'); }
+function goCart() { renderCartPage(); showPage('page-cart'); }
+function goCheckout() { if(!cart.length){showToast('⚠️ Add some gear first!');return;} renderCheckoutSummary(); showPage('page-checkout'); }
+
+// ── HOME PRODUCTS ────────────────────────────────────────────
+function renderHomeProducts() {
+  const grid = document.getElementById('homeProductGrid');
+  const featured = products.slice(0,8);
+  grid.innerHTML = featured.map(p => productCardHTML(p)).join('');
+}
+
+// ── EXPLORE PAGE ─────────────────────────────────────────────
+function renderExplorePage() {
+  const grid = document.getElementById('exploreGrid');
+  grid.innerHTML = Object.entries(categories).map(([key, cat]) => `
+    <div class="explore-card" onclick="goCategoryPage('${key}')">
+      <div class="explore-card-bg" style="background:var(--surface2)">
+        <span style="font-size:96px;z-index:1;position:relative">${cat.emoji}</span>
+      </div>
+      <div class="explore-card-body">
+        <div class="explore-card-name">${cat.name.toUpperCase()}</div>
+        <p class="explore-card-desc">${cat.desc}</p>
+        <div class="explore-card-meta">
+          <span class="explore-card-count">${cat.count} Products</span>
+          <span class="explore-card-arrow">SHOP NOW →</span>
+        </div>
+        <div class="explore-tags">
+          ${cat.tags.slice(0,4).map(t=>`<span class="explore-tag">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── CATEGORY PAGE ────────────────────────────────────────────
+function goCategoryPage(catKey, fromPage='explore') {
+  currentCat = catKey;
+  currentPriceFilter = 'all';
+  currentBadgeFilter = 'all';
+  currentSort = 'default';
+  prevPage = fromPage;
+
+  const cat = categories[catKey];
+  document.getElementById('catBreadcrumb').textContent = cat.name;
+  document.getElementById('catNavLink').textContent = cat.name;
+  document.title = `APEX GEAR — ${cat.name}`;
+
+  // hero
+  document.getElementById('catPageHero').innerHTML = `
+    <div class="cat-page-hero-bg" style="background:radial-gradient(circle at 70% 50%,${cat.color}22,transparent 70%)"></div>
+    <div class="cat-page-hero-content">
+      <div class="cat-page-hero-icon">${cat.emoji}</div>
+      <div class="cat-page-hero-text">
+        <h1>${cat.name.toUpperCase()}</h1>
+        <p>${cat.longDesc}</p>
+        <div class="cat-page-hero-stats">
+          <div class="cat-stat"><strong>${cat.count}</strong>Products</div>
+          <div class="cat-stat"><strong>Top</strong>Brands</div>
+          <div class="cat-stat"><strong>✅</strong>Certified</div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          ${cat.tags.map(t=>`<span style="border:1px solid var(--border);padding:4px 10px;font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // other sports sidebar
+  const otherLinks = document.getElementById('otherSportsLinks');
+  otherLinks.innerHTML = Object.entries(categories).map(([key,c]) =>
+    `<button class="filter-option${key===catKey?' active':''}" onclick="goCategoryPage('${key}')">
+      <span class="check">${key===catKey?'✓':''}</span>${c.emoji} ${c.name}
+    </button>`
+  ).join('');
+
+  // reset filter UI
+  document.querySelectorAll('.filter-sidebar .filter-option').forEach(b => {
+    b.classList.remove('active');
+    b.querySelector('.check').textContent = '';
+  });
+  const firstPrice = document.querySelector('.filter-sidebar .filter-option');
+  if(firstPrice){ firstPrice.classList.add('active'); firstPrice.querySelector('.check').textContent='✓'; }
+  document.getElementById('filterBadgeAll').classList.add('active');
+  document.getElementById('filterBadgeAll').querySelector('.check').textContent='✓';
+
+  renderCategoryProducts();
+  showPage('page-category');
+}
+
+function getFilteredCatProducts() {
+  let items = products.filter(p => p.cat === currentCat);
+  if(currentPriceFilter==='under5k') items=items.filter(p=>p.price<5000);
+  else if(currentPriceFilter==='5k-10k') items=items.filter(p=>p.price>=5000&&p.price<=10000);
+  else if(currentPriceFilter==='above10k') items=items.filter(p=>p.price>10000);
+  if(currentBadgeFilter!=='all') items=items.filter(p=>p.badge===currentBadgeFilter);
+  if(currentSort==='low') items=[...items].sort((a,b)=>a.price-b.price);
+  else if(currentSort==='high') items=[...items].sort((a,b)=>b.price-a.price);
+  else if(currentSort==='rating') items=[...items].sort((a,b)=>b.reviews-a.reviews);
+  return items;
+}
+
+function renderCategoryProducts() {
+  const items = getFilteredCatProducts();
+  document.getElementById('resultsCount').textContent = `${items.length} product${items.length!==1?'s':''}`;
+  const grid = document.getElementById('catProductGrid');
+  if(!items.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)"><div style="font-size:48px;margin-bottom:16px">😔</div><div style="font-family:Bebas Neue;font-size:28px;letter-spacing:2px">No Products Found</div><p style="margin-top:8px">Try adjusting your filters</p></div>`;
+    return;
+  }
+  grid.innerHTML = items.map(p => productCardHTML(p)).join('');
+}
+
+function applyPriceFilter(filter, btn) {
+  currentPriceFilter = filter;
+  document.querySelectorAll('.filter-sidebar .filter-option').forEach(b => {
+    if(['all','under5k','5k-10k','above10k'].some(v=>b.getAttribute('onclick')&&b.getAttribute('onclick').includes(v))){
+      b.classList.remove('active'); b.querySelector('.check').textContent='';
+    }
+  });
+  btn.classList.add('active'); btn.querySelector('.check').textContent='✓';
+  renderCategoryProducts();
+}
+
+function applyBadgeFilter(filter, btn) {
+  currentBadgeFilter = filter;
+  ['filterBadgeAll','filterBadgeSale','filterBadgeNew','filterBadgeHot'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('active');el.querySelector('.check').textContent='';}
+  });
+  btn.classList.add('active'); btn.querySelector('.check').textContent='✓';
+  renderCategoryProducts();
+}
+
+function applySort(val) { currentSort = val; renderCategoryProducts(); }
+
+// ── PRODUCT CARD HTML ────────────────────────────────────────
+function productCardHTML(p) {
+  return `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-img-wrap">
+        <div class="product-emoji">${p.emoji}</div>
+        ${p.badge?`<div class="product-badge badge-${p.badge}">${p.badge==='new'?'NEW':p.badge==='sale'?'SALE':'🔥 HOT'}</div>`:''}
+        <button class="product-wishlist" onclick="event.stopPropagation();toggleWishlist(this)">♡</button>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">${p.cat.toUpperCase()}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-rating"><span class="stars">${p.stars}</span><span class="rating-count">(${p.reviews})</span></div>
+        <div class="product-price-row">
+          <div>
+            <span class="product-price">₹${p.price.toLocaleString()}</span>
+            ${p.original?`<span class="product-original">₹${p.original.toLocaleString()}</span>`:''}
+          </div>
+          <button class="add-cart-btn" onclick="event.stopPropagation();addToCart(${p.id})">+ ADD</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── PRODUCT DETAIL ───────────────────────────────────────────
+function openProduct(id) {
+  const p = products.find(x=>x.id===id); if(!p) return;
+  selectedPdQty = 1; selectedSize = p.sizes?.[0]||'';
+  const savings = p.original ? Math.round(((p.original-p.price)/p.original)*100) : 0;
+  const cat = categories[p.cat];
+
+  // breadcrumb
+  document.getElementById('pdBreadcrumb').innerHTML = `
+    <button onclick="goHome()">Home</button><span>›</span>
+    <button onclick="goExplore()">Explore</button><span>›</span>
+    <button onclick="goCategoryPage('${p.cat}')">${cat.name}</button><span>›</span>
+    <span>${p.name}</span>`;
+
+  document.getElementById('pdWrapper').innerHTML = `
+    <div class="pd-image-box">
+      <div style="font-size:150px;z-index:1;position:relative">${p.emoji}</div>
+      ${p.badge?`<div class="product-badge badge-${p.badge}" style="position:absolute;top:16px;left:16px;padding:5px 12px;font-family:Barlow Condensed;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${p.badge==='new'?'NEW':p.badge==='sale'?'SALE':'🔥 HOT'}</div>`:''}
+    </div>
+    <div>
+      <div class="pd-cat">${p.cat.toUpperCase()} / ${cat.name}</div>
+      <h1 class="pd-name">${p.name}</h1>
+      <div class="pd-rating"><span class="stars" style="font-size:15px">${p.stars}</span><span style="font-size:13px;color:var(--muted);margin-left:4px">(${p.reviews} verified reviews)</span></div>
+      <div class="pd-price">₹${p.price.toLocaleString()}${p.original?`<span class="pd-original">₹${p.original.toLocaleString()}</span>`:''}</div>
+      ${savings>0?`<div class="pd-savings">✓ You save ${savings}% — ₹${(p.original-p.price).toLocaleString()}</div>`:''}
+      <hr class="pd-divider">
+      <p class="pd-desc">${p.desc}</p>
+      ${p.sizes&&p.sizes.length>1?`
+        <div class="pd-attr-label">Select Size</div>
+        <div class="pd-size-row" id="sizeRow">
+          ${p.sizes.map((s,i)=>`<button class="size-btn${i===0?' active':''}" onclick="selectSize(this,'${s}')">${s}</button>`).join('')}
+        </div>`:''}
+      <div class="pd-qty-row">
+        <span class="pd-qty-label">Quantity</span>
+        <div class="pd-qty">
+          <button class="pd-qty-btn" onclick="changePdQty(-1)">−</button>
+          <span class="pd-qty-num" id="pdQtyNum">1</span>
+          <button class="pd-qty-btn" onclick="changePdQty(1)">+</button>
+        </div>
+      </div>
+      <div class="pd-actions">
+        <button class="pd-add-btn" onclick="addToCartPd(${p.id})">🛒 ADD TO CART</button>
+        <button class="pd-buy-btn" onclick="addToCartPd(${p.id},true)">⚡ BUY NOW</button>
+      </div>
+      <div class="pd-features">
+        <div class="pd-feat"><span>✓</span><span>Free shipping above ₹3,000</span></div>
+        <div class="pd-feat"><span>✓</span><span>Certified & safety tested</span></div>
+        <div class="pd-feat"><span>✓</span><span>30-day easy returns</span></div>
+        <div class="pd-feat"><span>✓</span><span>Authentic brand guarantee</span></div>
+      </div>
+    </div>`;
+
+  // Related
+  const related = products.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,4);
+  if(related.length) {
+    document.getElementById('relatedSection').style.display='';
+    document.getElementById('relatedGrid').innerHTML = related.map(rp=>productCardHTML(rp)).join('');
+  } else {
+    document.getElementById('relatedSection').style.display='none';
+  }
+  showPage('page-product');
+}
+
+function selectSize(btn, size) {
+  document.querySelectorAll('#sizeRow .size-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); selectedSize=size;
+}
+function changePdQty(d) {
+  selectedPdQty = Math.max(1, selectedPdQty+d);
+  document.getElementById('pdQtyNum').textContent = selectedPdQty;
+}
+function addToCartPd(id, buyNow=false) {
+  const p=products.find(x=>x.id===id);
+  const ex=cart.find(x=>x.id===id);
+  if(ex) ex.qty+=selectedPdQty; else cart.push({...p,qty:selectedPdQty,size:selectedSize});
+  updateCartBadges(); showToast(`${p.emoji} ${p.name} added to cart!`);
+  if(buyNow) setTimeout(()=>goCart(),600);
+}
+
+// ── CART ────────────────────────────────────────────────────
+function addToCart(id) {
+  const p=products.find(x=>x.id===id);
+  const ex=cart.find(x=>x.id===id);
+  if(ex) ex.qty++; else cart.push({...p,qty:1});
+  updateCartBadges(); showToast(`${p.emoji} ${p.name} added to cart!`);
+}
+
+function updateCartBadges() {
+  const count=cart.reduce((s,x)=>s+x.qty,0);
+  ['cc1','cc2','cc3','cc4','cc5','cc6'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=count;
+  });
+}
+
+function renderCartPage() {
+  const count=cart.reduce((s,x)=>s+x.qty,0);
+  document.getElementById('cartPageSub').textContent=`${count} item${count!==1?'s':''}`;
+  const layout=document.getElementById('cartPageLayout');
+  const empty=document.getElementById('cartPageEmpty');
+  if(!cart.length){layout.style.display='none';empty.style.display='block';return;}
+  empty.style.display='none'; layout.style.display='';
+  document.getElementById('cartItemsList').innerHTML = cart.map(item=>`
+    <div class="cart-row">
+      <div class="cart-row-img">${item.emoji}</div>
+      <div>
+        <div class="cart-row-cat">${item.cat}</div>
+        <div class="cart-row-name">${item.name}</div>
+        ${item.size?`<div class="cart-row-unit">Size: ${item.size}</div>`:''}
+        <div class="cart-row-unit">Unit: ₹${item.price.toLocaleString()}</div>
+      </div>
+      <div class="cart-row-qty">
+        <button class="cq-btn" onclick="cartQty(${item.id},-1)">−</button>
+        <span class="cq-num">${item.qty}</span>
+        <button class="cq-btn" onclick="cartQty(${item.id},1)">+</button>
+      </div>
+      <div>
+        <div class="cart-row-total">₹${(item.price*item.qty).toLocaleString()}</div>
+        <button class="cart-row-remove" onclick="removeFromCart(${item.id})">Remove</button>
+      </div>
+    </div>`).join('');
+  const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  const disc=cartPromoApplied?Math.round(sub*.2):0;
+  document.getElementById('sumSubtotal').textContent='₹'+sub.toLocaleString();
+  document.getElementById('sumDiscount').textContent=disc>0?'−₹'+disc.toLocaleString():'₹0';
+  document.getElementById('sumTotal').textContent='₹'+(sub-disc).toLocaleString();
+}
+
+function cartQty(id,d){const it=cart.find(x=>x.id===id);if(!it)return;it.qty+=d;if(it.qty<=0)cart=cart.filter(x=>x.id!==id);renderCartPage();updateCartBadges();}
+function removeFromCart(id){cart=cart.filter(x=>x.id!==id);renderCartPage();updateCartBadges();showToast('Item removed from cart');}
+function applyCartPromo(){const c=document.getElementById('cartPromoInput').value.toUpperCase();if(c==='APEX20'){cartPromoApplied=true;showToast('✅ 20% discount applied!');renderCartPage();}else{showToast('❌ Invalid promo code');}}
+
+// ── CHECKOUT ────────────────────────────────────────────────
+function renderCheckoutSummary(){
+  const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  const disc=cartPromoApplied?Math.round(sub*.2):0;
+  const total=sub-disc;
+  document.getElementById('checkoutOrderItems').innerHTML=cart.map(it=>`
+    <div class="order-item-row">
+      <div class="order-item-thumb">${it.emoji}</div>
+      <div class="order-item-info"><div class="order-item-name">${it.name}</div><div class="order-item-sub">${it.size?`Size:${it.size} · `:''}Qty:${it.qty}</div></div>
+      <div class="order-item-price">₹${(it.price*it.qty).toLocaleString()}</div>
+    </div>`).join('');
+  document.getElementById('coSubtotal').textContent='₹'+sub.toLocaleString();
+  document.getElementById('coDiscount').textContent=disc>0?'−₹'+disc.toLocaleString():'₹0';
+  document.getElementById('coTotal').textContent='₹'+total.toLocaleString();
+  document.getElementById('payBtnTotal').textContent='₹'+total.toLocaleString();
+}
+
+function switchPayTab(tab,btn){
+  document.querySelectorAll('.pay-tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('ptab-'+tab).classList.add('active');
+  document.querySelectorAll('.pay-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function formatCard(i){let v=i.value.replace(/\D/g,'').substring(0,16);i.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function formatExpiry(i){let v=i.value.replace(/\D/g,'').substring(0,4);if(v.length>2)v=v.substring(0,2)+' / '+v.substring(2);i.value=v;}
+async function processPayment(){
+  showToast('⏳ Processing payment...');
+  const orderId='APEX-2026-'+Math.floor(Math.random()*90000+10000);
+  const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  const disc=cartPromoApplied?Math.round(sub*.2):0;
+  const order={
+    id:orderId, date:new Date().toISOString(),
+    items:cart.map(i=>({id:i.id,name:i.name,emoji:i.emoji,cat:i.cat,qty:i.qty,price:i.price,size:i.size||''})),
+    subtotal:sub, discount:disc, total:sub-disc,
+    status:'Processing', customer:'Customer'
+  };
+  // Save order locally
+  try{
+    const orders=JSON.parse(localStorage.getItem('apexgear_orders')||'[]');
+    orders.unshift(order);
+    localStorage.setItem('apexgear_orders',JSON.stringify(orders));
+  }catch(e){}
+  // Update stock on backend via PUT for each cart item
+  for(const ci of cart){
+    const p=products.find(x=>x.id===ci.id);
+    if(p){
+      const newStock=Math.max(0,(p.stock||10)-ci.qty);
+      p.stock=newStock;
+      // PUT updated product to backend
+      await updateProductOnBackend(p.id, p);
+    }
+  }
+  // Reload fresh product list from backend
+  products = await loadProducts();
+  cart=[];cartPromoApplied=false;updateCartBadges();
+  document.getElementById('successOrderId').textContent='ORDER #'+orderId;
+  showPage('page-success');showToast('🎉 Order confirmed! Gear ships in 24 hours.');
+}
+
+// ── SEARCH ──────────────────────────────────────────────────
+function openSearch(){document.getElementById('searchModal').classList.add('open');setTimeout(()=>document.getElementById('searchInput').focus(),100);}
+function closeSearch(){document.getElementById('searchModal').classList.remove('open');}
+function liveSearch(q){
+  const res=document.getElementById('searchResults');
+  if(!q.trim()){res.innerHTML='';return;}
+  const matches=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.cat.toLowerCase().includes(q.toLowerCase())).slice(0,6);
+  res.innerHTML=matches.map(p=>`
+    <div onclick="closeSearch();openProduct(${p.id})" style="background:var(--card-bg);border:1px solid var(--border);padding:12px;display:flex;gap:10px;align-items:center;cursor:none;transition:border-color .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size:28px">${p.emoji}</span>
+      <div><div style="font-family:Barlow Condensed;font-size:14px;font-weight:700">${p.name}</div><div style="font-size:12px;color:var(--accent);font-family:Barlow Condensed;letter-spacing:1px">${p.cat.toUpperCase()} · ₹${p.price.toLocaleString()}</div></div>
+    </div>`).join('');
+}
+function doSearch(q){
+  closeSearch();
+  const cat=q.toLowerCase();
+  if(categories[cat]){goCategoryPage(cat);}else{
+    goHome();showToast('🔍 Showing results for "'+q+'"');
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearch();});
+
+// ── WISHLIST ────────────────────────────────────────────────
+function toggleWishlist(btn){const a=btn.textContent==='♥';btn.textContent=a?'♡':'♥';btn.style.color=a?'':'var(--accent)';showToast(a?'Removed from wishlist':'♥ Added to wishlist!');}
+
+// ── TOAST ───────────────────────────────────────────────────
+function showToast(msg){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+// ── COUNTDOWN ───────────────────────────────────────────────
+let cdTarget=Date.now()+(8*3600+24*60)*1000;
+function tick(){const d=cdTarget-Date.now();if(d<=0){cdTarget=Date.now()+(8*3600+24*60)*1000;return;}const h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);const p=n=>String(n).padStart(2,'0');const h_=document.getElementById('cd-h');if(h_){h_.textContent=p(h);document.getElementById('cd-m').textContent=p(m);document.getElementById('cd-s').textContent=p(s);}}
+setInterval(tick,1000);tick();
+
+// ── INIT handled by async IIFE above ─────────────────────────
+</script>
+</body>
+</html>

@@ -2,7 +2,11 @@
    ADVENTURE PRO — script.js
 ═══════════════════════════════════════════ */
 
-let API = 'http://localhost:8080/products';
+let API_BASE = localStorage.getItem('apiUrl') 
+    || 'http://localhost:8080/api';
+
+let API = `${API_BASE}/products`;
+
 let allProducts = [];
 let currentView = 'grid';
 let deleteTargetId = null;

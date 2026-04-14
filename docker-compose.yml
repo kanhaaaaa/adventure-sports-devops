@@ -1,0 +1,36 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: sports-mysql
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: adventure_db
+
+    ports:
+      - "3307:3306"
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: sports-backend
+    restart: always
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/adventure_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root123
