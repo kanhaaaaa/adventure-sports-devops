@@ -54,4 +54,8 @@ public class ProductController {
             return "Product not found";
         }
     }
+    @GetMapping("/health")
+    public String health() {
+        return "OK";
+    }
 }

@@ -30,7 +30,7 @@ function checkStatus() {
   dot.className = 'status-dot';
   lbl.textContent = 'Connecting…';
 
-  fetch(API)
+  fetch(`${API_BASE}/health`)
     .then(r => {
       if (r.ok) {
         dot.classList.add('on');
