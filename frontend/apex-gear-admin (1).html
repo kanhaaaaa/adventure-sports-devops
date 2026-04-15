@@ -255,7 +255,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
     </div>
     <div class="topbar-actions">
       <button class="tb-btn" onclick="refreshAll()">🔄 Refresh</button>
-      <button class="tb-btn accent" onclick="showPanel('products',document.querySelector('.nav-item:nth-child(4))'); openAddProduct()">+ Add Product</button>
+      <button class="tb-btn accent" onclick="showPanel('products',document.querySelector('.nav-item:nth-child(4)')); openAddProduct()"; openAddProduct()">+ Add Product</button>
       <button class="tb-btn" onclick="doLogout()" style="border-color:var(--red);color:var(--red)">Logout</button>
     </div>
   </div>
@@ -526,7 +526,7 @@ function doLogin(){
 function doLogout(){document.getElementById('loginScreen').style.display='flex';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';}
 
 // ── BACKEND CONFIG ───────────────────────────────────────────
-const API_BASE = 'http://localhost:8080';
+const API_BASE = 'https://adventure-sports-devops-1.onrender.com';
 
 // Visual extras stored locally (emoji, badge, stars, etc. not in backend model)
 const VISUAL_EXTRAS = {
@@ -599,7 +599,7 @@ async function fetchProductsFromAPI() {
     return mapped;
   }
   // Fallback to localStorage cache
-  try { const s = localStorage.getItem('apexgear_products'); return s ? JSON.parse(s) : []; } catch(e) { return []; }
+  try { const s = localStorage.getItem('apexgear_products'); return s ? JSON.parse(s).map(mapProduct) : []; } catch(e) { return []; }
 }
 
 function saveVisualExtras(p) {
@@ -892,12 +892,16 @@ async function saveProduct(){
   }
 }
 
-async function deleteProduct(id){
-  if(!confirm('Delete this product from the store?')) return;
+async function deleteProduct(id) {
+  if (!confirm('Delete this product from the store?')) return;
   adminToast('⏳ Deleting...');
-  const result = await apiFetch(`/products/${id}`, { method: 'DELETE' });
-  if(result !== null) {
-    // Remove visual extras locally too
+
+  // Use raw fetch to handle empty 204 response correctly
+  try {
+    const res = await fetch(API_BASE + `/products/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    
+    // ✅ Success — update UI
     const all = JSON.parse(localStorage.getItem('apexgear_visual_extras') || '{}');
     delete all[id];
     localStorage.setItem('apexgear_visual_extras', JSON.stringify(all));
@@ -905,6 +909,8 @@ async function deleteProduct(id){
     saveProductsLS(products);
     renderProducts(); renderInventory(); renderDashboard();
     adminToast('🗑️ Product deleted from backend');
+  } catch(err) {
+    adminToast('⚠️ Delete failed: ' + err.message, 'error');
   }
 }
 

@@ -17,9 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
   bindPreviewListeners();
   bindKeyboard();
 
-  // restore saved API url
-  const saved = localStorage.getItem('apiUrl');
-  if (saved) { API = saved; document.getElementById('apiUrl').value = saved; }
 });
 
 // ── STATUS CHECK ─────────────────────────────
@@ -350,8 +347,8 @@ function addProduct() {
     return;
   }
 
-  const payload = { id, name, category: cat, price, description: desc };
-
+  const payload = { name, category: cat, price: parseFloat(price), description: desc };
+  console.log("SENDING:", payload);
   fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
