@@ -2,8 +2,7 @@
    ADVENTURE PRO — script.js
 ═══════════════════════════════════════════ */
 
-let API_BASE = localStorage.getItem('apiUrl') 
-    || 'http://localhost:8080';
+let API_BASE = 'https://adventure-sports-devops-1.onrender.com';
 
 let API = `${API_BASE}/products`;
 

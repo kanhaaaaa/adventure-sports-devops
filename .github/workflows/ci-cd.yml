@@ -36,4 +36,4 @@ jobs:
 
       # 5. Build Docker Image
       - name: Build Docker Image
-        run: docker build -t adventure-sports-app .
+        run: docker build -t adventure-sports-app ./backend
