@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════ */
 
 let API_BASE = localStorage.getItem('apiUrl') 
-    || 'http://localhost:8080/api';
+    || 'http://localhost:8080';
 
 let API = `${API_BASE}/products`;
 
@@ -31,7 +31,7 @@ function checkStatus() {
   dot.className = 'status-dot';
   lbl.textContent = 'Connecting…';
 
-  fetch(API)
+  fetch(`${API_BASE}/health`)
     .then(r => {
       if (r.ok) {
         dot.classList.add('on');
