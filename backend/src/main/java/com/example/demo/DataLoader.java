@@ -8,6 +8,7 @@ import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 
 @Configuration
+@org.springframework.context.annotation.Profile("!test")
 public class DataLoader {
 
     @Bean
