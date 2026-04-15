@@ -42,4 +42,6 @@ jobs:
 
       # 6. Trigger Render Deployment (CD STEP)
       - name: Trigger Render Deploy
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: curl -X POST "$RENDER_DEPLOY_HOOK"
