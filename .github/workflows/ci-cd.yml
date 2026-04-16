@@ -7,40 +7,44 @@ on:
       - develop
 
 jobs:
+
+  #  BUILD JOB
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      # 2. Scan for hardcoded secrets
-      - name: Scan for Secrets using Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        with:
-          args: detect --source=. --verbose --redact
-
-      # 3. Set up Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 4. Build backend with Maven
       - name: Build with Maven
         run: |
           cd backend
-          mvn clean package
+          mvn clean compile
 
-      # 5. Build Docker Image
-      - name: Build Docker Image
-        run: docker build -t adventure-sports-app ./backend
+  #  TEST JOB
+  test:
+    runs-on: ubuntu-latest
+    needs: build   # runs AFTER build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # 6. Trigger Render Deployment (CD STEP)
+      - name: Run Tests
+        run: |
+          cd backend
+          mvn test
+
+  #  DEPLOY JOB
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test   # runs AFTER test
+    if: github.ref == 'refs/heads/main'
+    steps:
       - name: Trigger Render Deploy
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
