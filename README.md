@@ -194,7 +194,7 @@ adventure-sports-devops/
 
 ---
 
-## GitHub Secrets
+## GitHub & Render Secrets
 
 Sensitive credentials are securely managed using GitHub Secrets — no hardcoded values in source code.
 
