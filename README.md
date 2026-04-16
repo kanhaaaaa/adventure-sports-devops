@@ -271,8 +271,8 @@ Sensitive credentials are securely managed using GitHub Secrets — no hardcoded
 
 | Service | URL |
 |---------|-----|
-| Frontend | `https://your-frontend.onrender.com` |
-| Backend API | `https://your-backend.onrender.com/products` |
+| Frontend | `https://adventure-sports-devops-frontend.onrender.com` |
+| Backend API | `https://adventure-sports-devops-backend.onrender.com/products` |
 
 > Replace placeholder URLs with your actual Render deployment links.
 
@@ -281,10 +281,12 @@ Sensitive credentials are securely managed using GitHub Secrets — no hardcoded
 ## Screenshots
 
 | CI/CD Pipeline | Deployment Output |
-|----------------|-------------------|
-| *(Add screenshot of GitHub Actions: build → test → deploy)* | *(Add screenshot of live frontend/backend)* |
+<img width="1919" height="916" alt="image" src="https://github.com/user-attachments/assets/e1c8203f-13c8-4c5d-85e4-53f17451ffdb" />
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/11485068-e661-4eb6-827e-57d3b9a584a6" />
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/e095e34c-9daf-4e79-9276-1cacf5ac5d38" />
 
-> Place screenshots in the `/docs` folder and update paths here.
+
+
 
 ---
 
