@@ -1,4 +1,3 @@
-<img width="1918" height="973" alt="Screenshot 2026-04-17 013811" src="https://github.com/user-attachments/assets/4c4face7-2e2c-405a-9c9c-9e3ff865c50a" />
 # Adventure Sports Store — Full Stack DevOps Implementation
 
 ![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
