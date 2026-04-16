@@ -103,36 +103,83 @@ Push to main
 
 ```yaml
 # .github/workflows/ci-cd.yml
-name: CI/CD Pipeline
+name: Java CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
 
 jobs:
+
+  # 🔹 BUILD + SECURITY + DOCKER
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Secret scan (DevOps best practice)
+      - name: Scan for Secrets using Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --source=. --verbose --redact
+
+      # 3. Setup Java
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
+
+      # 4. Build with Maven (creates JAR)
       - name: Build with Maven
-        run: mvn clean install
+        run: |
+          cd backend
+          mvn clean package -DskipTests
 
+      # 5. Build Docker Image 🐳
+      - name: Build Docker Image
+        run: docker build -t adventure-sports-app ./backend
+
+  # 🔹 TEST JOB
   test:
+    runs-on: ubuntu-latest
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - run: mvn test
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Render
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Run tests
+      - name: Run Tests
+        run: |
+          cd backend
+          mvn test
+
+  # 🔹 DEPLOY JOB (CD)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Trigger Render Deploy
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST "$RENDER_DEPLOY_HOOK"
 ```
 
 ---
