@@ -15,7 +15,7 @@
 | Name | Role |
 |------|------|
 | Aditya Kapoor | Frontend Engineer |
-| Manas Govil | Backend Engineer |
+| Manas Goel | Backend Engineer |
 | Prathmesh Sundaram | DevOps Engineer |
 
 ---
