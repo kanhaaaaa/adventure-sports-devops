@@ -2,7 +2,7 @@
    ADVENTURE PRO — script.js
 ═══════════════════════════════════════════ */
 
-let API_BASE = 'https://adventure-sports-devops-1.onrender.com';
+let API_BASE = 'https://adventure-sports-devops-backend.onrender.com';
 
 let API = `${API_BASE}/products`;
 
