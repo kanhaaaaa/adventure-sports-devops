@@ -72,7 +72,6 @@ Key challenges addressed:
 +--------------------------------+
 ```
 
-> Architecture diagram available at [`/docs/architecture.png`](./docs/architecture.png)
 
 ---
 
