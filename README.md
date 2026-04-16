@@ -1,3 +1,4 @@
+<img width="1918" height="973" alt="Screenshot 2026-04-17 013811" src="https://github.com/user-attachments/assets/4c4face7-2e2c-405a-9c9c-9e3ff865c50a" />
 # Adventure Sports Store — Full Stack DevOps Implementation
 
 ![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
@@ -282,8 +283,10 @@ Sensitive credentials are securely managed using GitHub Secrets — no hardcoded
 
 | CI/CD Pipeline | Deployment Output |
 <img width="1919" height="916" alt="image" src="https://github.com/user-attachments/assets/e1c8203f-13c8-4c5d-85e4-53f17451ffdb" />
+<img width="1919" height="906" alt="image" src="https://github.com/user-attachments/assets/10117450-18ba-4c0e-ab77-dfc5f98078ba" />
 <img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/11485068-e661-4eb6-827e-57d3b9a584a6" />
 <img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/e095e34c-9daf-4e79-9276-1cacf5ac5d38" />
+<img width="1918" height="973" alt="Screenshot 2026-04-17 013811" src="https://github.com/user-attachments/assets/4e9a9639-469d-46ff-be20-78b1e3832f6f" />
 
 
 
