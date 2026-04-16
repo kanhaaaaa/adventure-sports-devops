@@ -2,8 +2,7 @@
    ADVENTURE PRO — script.js
 ═══════════════════════════════════════════ */
 
-let API_BASE = localStorage.getItem('apiUrl') 
-    || 'http://localhost:8080/api';
+let API_BASE = 'https://adventure-sports-devops-1.onrender.com';
 
 let API = `${API_BASE}/products`;
 
@@ -18,9 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
   bindPreviewListeners();
   bindKeyboard();
 
-  // restore saved API url
-  const saved = localStorage.getItem('apiUrl');
-  if (saved) { API = saved; document.getElementById('apiUrl').value = saved; }
 });
 
 // ── STATUS CHECK ─────────────────────────────
@@ -31,7 +27,7 @@ function checkStatus() {
   dot.className = 'status-dot';
   lbl.textContent = 'Connecting…';
 
-  fetch(API)
+  fetch(`${API_BASE}/health`)
     .then(r => {
       if (r.ok) {
         dot.classList.add('on');
@@ -351,8 +347,8 @@ function addProduct() {
     return;
   }
 
-  const payload = { id, name, category: cat, price, description: desc };
-
+  const payload = { name, category: cat, price: parseFloat(price), description: desc };
+  console.log("SENDING:", payload);
   fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

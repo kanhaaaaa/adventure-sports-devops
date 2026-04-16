@@ -998,7 +998,7 @@ const categories = {
 };
 
 // ── BACKEND CONFIG ───────────────────────────────────────────
-const API_BASE = 'http://localhost:8080';
+const API_BASE = 'https://adventure-sports-devops-1.onrender.com';
 
 // ── VISUAL EXTRAS LOOKUP (emoji, badge, stars, etc. keyed by product id) ──
 // Backend only stores: id, name, category, price, description
@@ -1061,7 +1061,7 @@ async function loadProducts() {
   const data = await apiFetch('/products');
   if (data && Array.isArray(data)) return data.map(mapProduct);
   // fallback to localStorage cache if backend is unreachable
-  try { const s = localStorage.getItem('apexgear_products'); return s ? JSON.parse(s) : []; } catch(e){ return []; }
+  try { const s = localStorage.getItem('apexgear_products'); return s ? JSON.parse(s).map(mapProduct) : []; } catch(e){ return []; }
 }
 
 async function saveProducts(updatedList) {

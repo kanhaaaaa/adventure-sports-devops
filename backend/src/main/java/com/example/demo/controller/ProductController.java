@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,7 @@ import com.example.demo.service.ProductService;
 
 
 
-
+@CrossOrigin(origins = "*")
 @RestController
 public class ProductController {
 
@@ -52,5 +53,9 @@ public class ProductController {
         } else {
             return "Product not found";
         }
+    }
+    @GetMapping("/health")
+    public String health() {
+        return "OK";
     }
 }
